@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.LoginActivity">
+
+
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/pallet2"/>
+
+
+        <FrameLayout
+            android:id="@+id/FrameLayoutMeio"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:background="@drawable/screen_border"
+            android:layout_gravity="center|center_vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                android:id="@+id/textView"
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usuario:" />
+
+                <EditText
+                    android:id="@+id/edtUserLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textView"
+                    android:background="@drawable/apptheme_edit_text_holo_light"
+                    android:inputType="textPersonName" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:textColor="#000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edtUserLogin"
+                    android:text="Senha:" />
+
+                <EditText
+                    android:id="@+id/edtSenhaLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textView2"
+                    android:background="@drawable/apptheme_edit_text_holo_light"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/btLogin"
+                    android:layout_width="75dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/buttons_border"
+                    android:text="Login"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="18dp"
+                    android:onClick="login"/>
+
+                <Button
+                    android:id="@+id/btCadastrar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="#c03028"
+                    android:text="Cadastrar"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:onClick="cadastrar"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+    </FrameLayout>
+</RelativeLayout>

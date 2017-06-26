@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.SplashActivity">
+
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/pallet2"/>
+        <WebView
+            android:id="@+id/splash_loader"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"/>
+
+        <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:layout_gravity="center|top"
+                android:src="@drawable/pokemon_go_logo" />
+            </FrameLayout>
+        </RelativeLayout>
