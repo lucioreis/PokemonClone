@@ -94,6 +94,9 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if(sensor == null) Toast.makeText(this, "Nao tem girsocopiculos", Toast.LENGTH_SHORT).show();
+        else {
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
     @Override
     protected void onStart(){
@@ -103,22 +106,24 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     @Override
     protected void onResume(){
         super.onResume();
-        if(sensor != null){
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
-        }
-        coeficiente_x = larguraDaTela/72d;
-        coeficiente_y = alturaDaTela/72d;
-        float proporcaoY = alturaDaTela/( ( (float)pokemonNaTela.getDrawable().getIntrinsicHeight())*2.0f);
-        float proporcaoX = larguraDaTela/( ( (float)pokemonNaTela.getDrawable().getIntrinsicWidth())*2.0f);
+        pokemonNaTela.post(new Runnable() {
+            @Override
+            public void run() {
+                coeficiente_x = larguraDaTela/72d;
+                coeficiente_y = alturaDaTela/72d;
+                float proporcaoY = alturaDaTela/( ( (float)pokemonNaTela.getDrawable().getIntrinsicHeight())*2.0f);
+                float proporcaoX = larguraDaTela/( ( (float)pokemonNaTela.getDrawable().getIntrinsicWidth())*2.0f);
 
-        pokemonNaTela.getLayoutParams().height = (int) (pokemonNaTela.getDrawable().getIntrinsicHeight()*proporcaoY);
-        pokemonNaTela.getLayoutParams().width = (int) (pokemonNaTela.getDrawable().getIntrinsicWidth()*proporcaoX);
-        pokemonNaTela.setY(alturaDaTela/2 - (int)(pokemonNaTela.getDrawable().getIntrinsicHeight()*proporcaoY)/2);
-        pokemonNaTela.setX(larguraDaTela/2 - (int)(pokemonNaTela.getDrawable().getIntrinsicWidth()*proporcaoX)/2);
-        Log.d("captura", pokemonNaTela.getTop()+" "+pokemonNaTela.getBottom() +  ' ' + pokemonNaTela.getLeft() + " " + pokemonNaTela.getRight());
-        Log.i("captura", "X x Y = " + pokemonNaTela.getDrawable().getIntrinsicHeight()+ " + " + pokemonNaTela.getDrawable().getIntrinsicWidth());
-        Log.i("captura","alturaXlargura = " + pokemonNaTela.getHeight() +"x"+pokemonNaTela.getWidth());
-        Log.i("captura","AlturaLarguraDaTela = " + alturaDaTela + " x " + larguraDaTela);
+                pokemonNaTela.getLayoutParams().height = (int) (pokemonNaTela.getDrawable().getIntrinsicHeight()*proporcaoY);
+                pokemonNaTela.getLayoutParams().width = (int) (pokemonNaTela.getDrawable().getIntrinsicWidth()*proporcaoX);
+                pokemonNaTela.setY(alturaDaTela/2 - (int)(pokemonNaTela.getDrawable().getIntrinsicHeight()*proporcaoY)/2);
+                pokemonNaTela.setX(larguraDaTela/2 - (int)(pokemonNaTela.getDrawable().getIntrinsicWidth()*proporcaoX)/2);
+                Log.d("captura", pokemonNaTela.getTop()+" "+pokemonNaTela.getBottom() +  ' ' + pokemonNaTela.getLeft() + " " + pokemonNaTela.getRight());
+                Log.i("captura", "X x Y = " + pokemonNaTela.getDrawable().getIntrinsicHeight()+ " + " + pokemonNaTela.getDrawable().getIntrinsicWidth());
+                Log.i("captura","alturaXlargura = " + pokemonNaTela.getHeight() +"x"+pokemonNaTela.getWidth());
+                Log.i("captura","AlturaLarguraDaTela = " + alturaDaTela + " x " + larguraDaTela);
+            }
+        });
     }
     @Override
     protected void onPause(){
@@ -251,12 +256,14 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     public boolean onTouch(View v, final MotionEvent event) {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
                 x0 = v.getX(); y0 = v.getY();
                 timer_inicio = System.currentTimeMillis();
                 dx = v.getX() - event.getRawX() - (v.getWidth() / 2);
                 dy = v.getY() - event.getRawY() - (v.getHeight() / 2);
                 break;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
                 timer_fim = System.currentTimeMillis();
                 xf = v.getX(); yf = v.getY();
                 float vx = ((xf - x0)*10)/(timer_fim - timer_inicio);
@@ -264,10 +271,17 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 Log.d("vxvy", "vx= " + vx +"vy= "+vy);
                 while ((v.getX() < larguraDaTela && v.getX() >= 0)
                         && (v.getY() < alturaDaTela  && v.getY() >= 0)){
+                        v.setX(v.getX()+vx);
+                        v.setY(v.getY()+vy);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     if(checaColisao(pokemonNaTela, v)){
                         Log.d("colli", "colidiu");
                         capituraPokemon();
-                       // finish();
+                        finish();
                     }
                     v.animate()
                             .setDuration(100)
