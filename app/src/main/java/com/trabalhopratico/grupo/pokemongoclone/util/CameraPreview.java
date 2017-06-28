@@ -84,9 +84,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         if(qOpened == true){
             mPreview = new CameraPreview(MyApp.getContext(), mCamera);
-            SurfaceView preview = (SurfaceView) view.findViewById(R.id.camera);
+           // SurfaceView preview = (SurfaceView) view.findViewById(R.id.camera);
 
-            setHolder(preview);
+            //setHolder(preview);
             startCameraPreview();
         }
         return qOpened;

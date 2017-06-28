@@ -5,20 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.CapturarActivity">
-    <SurfaceView
+    <fragment
+        android:name="com.trabalhopratico.grupo.pokemongoclone.controller.CameraSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/camera"/>
-    <FrameLayout
+        android:id="@+id/cameraFragment"/>
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/overly_camera"
-        android:layout_gravity="center">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/pokemon"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"/>
-    </FrameLayout>
+        android:id="@+id/explosao"
+        android:layout_gravity="center"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:background="@color/azul"
+        android:id="@+id/pokemon"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pokeball_image_view"/>
+
 </FrameLayout>

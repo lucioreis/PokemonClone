@@ -1,8 +1,10 @@
 package com.trabalhopratico.grupo.pokemongoclone.controller;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -10,28 +12,31 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Display;
+import android.view.InputDevice;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.AbsoluteLayout;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.trabalhopratico.grupo.pokemongoclone.R;
-import com.trabalhopratico.grupo.pokemongoclone.R.drawable;
 import com.trabalhopratico.grupo.pokemongoclone.model.Aparecimento;
 
 import java.io.IOException;
 
 public class CapturarActivity extends Activity implements SensorEventListener, View.OnTouchListener{
-    private Camera mCamera;
-    private CameraPreview mPreview;
-    private ImageView pokemonNaTela, _pokeball, pokemon;
+    private ImageView _pokeball, pokemon;
     private  Aparecimento aparecimento;
     private Intent it;
     private Sensor sensor;
@@ -39,57 +44,31 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     private float grausNovos[] = new float[3];
     private float grausTotais[] = new float[3];
     private float grausVelhos[] = new float[3];
-    private Display display;//= getWindowManager().getDefaultDisplay();
-    private Double coeficiente_x, coeficiente_y;
+    private Display dispaly;
+    private Double coeficiente;
     private int larguraDaTela, alturaDaTela;
-    private float dx, dy, velx, vely;
-    private View mCameraView;
+    private float dx, dy,centerX, centerY;
+    FragmentTransaction fragmentTransaction;
+    CameraSurfaceView cameraSurfaceView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capturar);
-        mCamera = getCameraInstance();
-        safeCameraOpenInView(this.findViewById(android.R.id.content));
 
-//        pokemonNaTela = (ImageView) findViewById(R.id.pokemon_img);
+        cameraSurfaceView = new CameraSurfaceView();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.cameraFragment, cameraSurfaceView).commit();
+
         it = getIntent();
         aparecimento = (Aparecimento) it.getSerializableExtra("Apar");
-        /////////////////////////////////////////////////////////////////////
-        //-----------------------------------------------------
-        display = getWindowManager().getDefaultDisplay();
-        larguraDaTela = display.getWidth();
-        alturaDaTela = display.getHeight();
-        // _pokeball = (ImageView) findViewById(R.id.pokebola);
         pokemon = (ImageView) findViewById(R.id.pokemon);
+        pokemon.setImageResource(aparecimento.getPokemon().getFoto());
 
-        pokemonNaTela = new ImageView(this);
-        pokemonNaTela.setImageResource(aparecimento.getPokemon().getFoto());
-     //   pokemon.setImageResource(aparecimento.getPokemon().getFoto());
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        pokemonNaTela.setLayoutParams(params);
-        //pokemonNaTela.setBackgroundColor(Color.BLUE);
-        pokemonNaTela.setAdjustViewBounds(true);
-        FrameLayout fl = (FrameLayout) findViewById(R.id.overly_camera);
-        fl.addView(pokemonNaTela);
-
-        int tamanhoDaPokebola = alturaDaTela/10;
-        _pokeball = new ImageView(this);
-        _pokeball.setImageResource(drawable.pokeball);
-        ViewGroup.LayoutParams _params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        _pokeball.setLayoutParams(_params);
-        _pokeball.setAdjustViewBounds(true);
-        _pokeball.setMaxHeight(tamanhoDaPokebola);
-        _pokeball.setMaxWidth(tamanhoDaPokebola);
-        _pokeball.setScaleType(ImageView.ScaleType.FIT_XY);
-        _pokeball.setX((larguraDaTela/2) - tamanhoDaPokebola/2);
-        _pokeball.setY(alturaDaTela - ((int)(tamanhoDaPokebola*1.5)));
+        _pokeball = (ImageView) findViewById(R.id.pokeball_image_view);
+        _pokeball.setImageResource(R.drawable.pokeball);
         _pokeball.setOnTouchListener(this);
-        fl.addView(_pokeball);
 
-        //------------------------------------------------------
-        ///////////////////////////////////////////////////////
-        //BitmapFactory.Options options = new BitmapFactory.Options();
-        //options.inJustDecodeBounds = true;
         Log.i("captura", getResources().getResourceEntryName( aparecimento.getPokemon().getFoto()));
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
@@ -97,34 +76,46 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         else {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
         }
-    }
-    @Override
-    protected void onStart(){
-        super.onStart();
+
+//        getCurrentFocus()..getViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+//            public void onGlobalLayout() {
+//                getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//
+               // // all views has been placed
+                //// make your calculation now...
+//            }
+//        });
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        pokemonNaTela.post(new Runnable() {
+                pokemon.post(new Runnable() {
             @Override
             public void run() {
-                coeficiente_x = larguraDaTela/72d;
-                coeficiente_y = alturaDaTela/72d;
-                float proporcaoY = alturaDaTela/( ( (float)pokemonNaTela.getDrawable().getIntrinsicHeight())*2.0f);
-                float proporcaoX = larguraDaTela/( ( (float)pokemonNaTela.getDrawable().getIntrinsicWidth())*2.0f);
-
-                pokemonNaTela.getLayoutParams().height = (int) (pokemonNaTela.getDrawable().getIntrinsicHeight()*proporcaoY);
-                pokemonNaTela.getLayoutParams().width = (int) (pokemonNaTela.getDrawable().getIntrinsicWidth()*proporcaoX);
-                pokemonNaTela.setY(alturaDaTela/2 - (int)(pokemonNaTela.getDrawable().getIntrinsicHeight()*proporcaoY)/2);
-                pokemonNaTela.setX(larguraDaTela/2 - (int)(pokemonNaTela.getDrawable().getIntrinsicWidth()*proporcaoX)/2);
-                Log.d("captura", pokemonNaTela.getTop()+" "+pokemonNaTela.getBottom() +  ' ' + pokemonNaTela.getLeft() + " " + pokemonNaTela.getRight());
-                Log.i("captura", "X x Y = " + pokemonNaTela.getDrawable().getIntrinsicHeight()+ " + " + pokemonNaTela.getDrawable().getIntrinsicWidth());
-                Log.i("captura","alturaXlargura = " + pokemonNaTela.getHeight() +"x"+pokemonNaTela.getWidth());
-                Log.i("captura","AlturaLarguraDaTela = " + alturaDaTela + " x " + larguraDaTela);
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                alturaDaTela = size.y;
+                larguraDaTela = size.x;
+                coeficiente = larguraDaTela/72d;
+                float larguraImgPkm = larguraDaTela/2;
+                float proporcao = (pokemon.getMeasuredWidth())/larguraDaTela;
+                float alturaImgPkm = pokemon.getMeasuredHeight()*proporcao/2;
+                centerX = larguraDaTela/2 - (((int) larguraImgPkm)/2);
+                centerY = alturaDaTela/2  - (((int) alturaImgPkm)/2);
+                pokemon.getLayoutParams().height = (int) alturaImgPkm;
+                pokemon.getLayoutParams().width = (int) larguraImgPkm;
+                pokemon.setX(centerX);// - pokemon.getWidth()/2);
+                pokemon.setY(centerY);
+                _pokeball.getLayoutParams().height = alturaDaTela/10;
+                _pokeball.getLayoutParams().width = alturaDaTela/10;
+                Log.d("captura", pokemon.getX()+" "+ pokemon.getY() +  ' ' + pokemon.getLeft() + " " + pokemon.getRight());
+                Log.d("captura", "X x Y = " + pokemon.getHeight()+ " + " + pokemon.getWidth());
             }
         });
     }
+
     @Override
     protected void onPause(){
         super.onPause();
@@ -133,47 +124,8 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     @Override
     public void onDestroy() {
         super.onDestroy();
-        releaseCameraAndPreview();
     }
 
-
-    private Camera getCameraInstance(){
-        Camera c = null;
-        try{
-            c = Camera.open();
-        }catch(Exception e){}
-        return c;
-    }
-
-    private void releaseCameraAndPreview() {
-
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.release();
-            mCamera = null;
-        }
-        if(mPreview != null){
-            mPreview.destroyDrawingCache();
-            //mPreview.mCamera = null;
-        }
-    }
-
-    private boolean safeCameraOpenInView(View view) {
-        boolean qOpened = false;
-        releaseCameraAndPreview();
-        mCamera = getCameraInstance();
-        mCameraView = view;
-        qOpened = (mCamera != null);
-
-        if(qOpened == true){
-            mPreview = new CameraPreview(getBaseContext(), mCamera);
-            SurfaceView preview = (SurfaceView) view.findViewById(R.id.camera);
-
-            mPreview.setHolder(preview);
-            mPreview.startCameraPreview();
-        }
-        return qOpened;
-    }
 
     /**
      * Called when there is a new sensor event.  Note that "on changed"
@@ -218,10 +170,12 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
             grausTotais[0] = 360 + grausTotais[0];
         }
         //Log.i("captura", "gtx = "+ grausTotais[1] + " gty= "+grausTotais[0]);
-        pokemonNaTela.setX((float) (grausTotais[1]*coeficiente_x));
-        pokemonNaTela.setY((float) (grausTotais[0]*coeficiente_y));
-        pokemonNaTela.setRotation(grausTotais[2]);
-        //Log.d("captura", pokemonNaTela.getTop()+" "+pokemonNaTela.getBottom() +  ' ' + pokemonNaTela.getLeft() + " " + pokemonNaTela.getRight());
+        if(pokemon.hasWindowFocus()) {
+            pokemon.setX((float) (grausTotais[1] * coeficiente));
+            pokemon.setY((float) (grausTotais[0] * coeficiente));
+            pokemon.setRotation(grausTotais[2]);
+        }
+        //Log.d("captura", pokemon.getTop()+" "+pokemon.getBottom() +  ' ' + pokemon.getLeft() + " " + pokemon.getRight());
 
     }
 
@@ -259,8 +213,9 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
             case MotionEvent.ACTION_POINTER_DOWN:
                 x0 = v.getX(); y0 = v.getY();
                 timer_inicio = System.currentTimeMillis();
-                dx = v.getX() - event.getRawX() - (v.getWidth() / 2);
-                dy = v.getY() - event.getRawY() - (v.getHeight() / 2);
+                dx = event.getRawX() - (v.getWidth() / 2);
+                dy = event.getRawY() - (v.getHeight() / 2);
+                v.setX(dx); v.setY(dy);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
@@ -268,32 +223,43 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 xf = v.getX(); yf = v.getY();
                 float vx = ((xf - x0)*10)/(timer_fim - timer_inicio);
                 float vy = ((yf - y0)*10)/(timer_fim - timer_inicio);
+                if(vx < 10 || vy < 10){ vx = 10; vy = 10;}
                 Log.d("vxvy", "vx= " + vx +"vy= "+vy);
-                while ((v.getX() < larguraDaTela && v.getX() >= 0)
-                        && (v.getY() < alturaDaTela  && v.getY() >= 0)){
-                        v.setX(v.getX()+vx);
-                        v.setY(v.getY()+vy);
+                while ( (v.getX() < larguraDaTela && v.getX() >= 0)
+                        && (v.getY() < alturaDaTela  && v.getY() >= 0) ){
+                    if(checaColisao(pokemon, v)){
+                        Log.d("capitura", "colidiu");
+                        capituraPokemon();
+                        return true;
+                    }else{
+                        Log.d("capitura", "nao colidiu");
+                    }
+                    v.setX(v.getX()+vx);
+                    v.setY(v.getY()+vy);
+                    final View tmp = v;
+                    final float x = vx, y=vy;
+                    Runnable runnable = new Runnable(){
+                        @Override
+                        public void run(){
+                                tmp.animate()
+                                        .setDuration(100)
+                                        .x(tmp.getX()+x)
+                                        .y(tmp.getY()+y)
+                                        .start();
+                        }
+                    };
+                    new Thread(runnable);
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(100L);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if(checaColisao(pokemonNaTela, v)){
-                        Log.d("colli", "colidiu");
-                        capituraPokemon();
-                        finish();
-                    }
-                    v.animate()
-                            .setDuration(100)
-                            .x(v.getX()+vx)
-                            .y(v.getY()+vy)
-                            .start();
                     Log.d("cap", "vgety"+ v.getY());
                 }
-                Toast.makeText(getBaseContext(), "Errou a pokebola", Toast.LENGTH_SHORT);
                 v.setX(larguraDaTela/2 - v.getWidth()/2);
-                v.setY(alturaDaTela - 100);
+                v.setY(alturaDaTela - 200);
                 Log.d("vxvy", ""+v.getY());
+                Toast.makeText(getBaseContext(), "Errou a pokebola", Toast.LENGTH_SHORT);
                 break;
             case MotionEvent.ACTION_MOVE:
                 v.animate()
@@ -309,156 +275,43 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     }
 
     private void capituraPokemon() {
-        Toast.makeText(this, "Pokemon cApiturado", Toast.LENGTH_SHORT);
+        pokemon.setImageResource(R.drawable.explosion);
+        pokemon.setScaleType(ImageView.ScaleType.CENTER);
+        pokemon.setAdjustViewBounds(true);
+        final ImageView pokeballTmp  = _pokeball;
+        Runnable runnable = new Runnable(){
+            @Override
+                public void run(){
+                    pokeballTmp.animate()
+                        .rotation( (float)20).setDuration(300)
+                        .rotation( (float) -40).setDuration(300)
+                        .rotation( (float) 40 ).setDuration(300)
+                        .rotation( (float) -20 ).setDuration(300).start();
+                }
+            };
+            new Thread(runnable);
+        try {
+            Thread.sleep(1300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean checaColisao(View pokemon,View pokebola) {
-        //Retangulo:
-        // a______b
-        // |      |
-        // c______d
-        int a = (int)pokemon.getX();
-        int b = a + pokemon.getWidth();
-        int c = (int) pokemon.getY();
-        int d = c + pokemon.getHeight();
-        int A = (int) pokebola.getX();
-        int B =  A + pokebola.getWidth();
-        int C = (int) pokebola.getY();
-        int D = C + pokebola.getHeight();
-        Log.d("coli", a+ " "+ b+" "+c+" "+d);
-        Log.d("coli", A+ " "+ B+" "+C+" "+D);
-        Rect R1=new Rect(a, b, c, d);
-        Rect R2=new Rect(A, B,C,D);
-        return !(R1.intersect(R2));
-    }
+        int pokemonTop = (int) pokemon.getY();
+        int pokemonLeft = (int) pokemon.getX();
+        int pokemonBottom = pokemonTop + pokemon.getHeight();
+        int pokemonRight = pokemonLeft + pokemon.getWidth();
 
-    class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-        private SurfaceHolder mHolder;
+        int pokebolaTop = (int) pokebola.getY();
+        int pokebolaLeft = (int) pokebola.getX();
+        int pokebolaBottom = pokebolaTop + pokebola.getHeight();
+        int pokebolaRight = pokebolaLeft + pokebola.getWidth();
 
-        public CameraPreview(Context context, Camera camera) {
-            super(context);
-            mCamera = camera;
-            mHolder = getHolder();
-            mHolder.addCallback(this);
-        }
-
-        public void setHolder(SurfaceView surfaceView){
-            mHolder = surfaceView.getHolder();
-            mHolder.addCallback(this);
-
-        }
-        /**
-         * This is called immediately after the surface is first created.
-         * Implementations of this should start up whatever rendering code
-         * they desire.  Note that only one thread can ever draw into
-         * a {@link Surface}, so you should not draw into the Surface here
-         * if your normal rendering will be in another thread.
-         *
-         * @param holder The SurfaceHolder whose surface is being created.
-         */
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            try{
-                mCamera.setPreviewDisplay(mHolder);
-                mCamera.startPreview();
-            }catch (IOException e) {
-                Log.d("captura", "Error setting camera preview: " + e.getMessage() );
-            }
-        }
-
-        /**
-         * This is called immediately after any structural changes (format or
-         * size) have been made to the surface.  You should at this point update
-         * the imagery in the surface.  This method is always called at least
-         * once, after {@link #surfaceCreated}.
-         *
-         * @param holder The SurfaceHolder whose surface has changed.
-         * @param format The new PixelFormat of the surface.
-         * @param width  The new width of the surface.
-         * @param height The new height of the surface.
-         */
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            // If your preview can change or rotate, take care of those events here.
-            // Make sure to stop the preview before resizing or reformatting it.
-
-            if (mHolder.getSurface() == null){
-                // preview surface does not exist
-                return;
-            }
-
-            // stop preview before making changes
-            try {
-                mCamera.stopPreview();
-            } catch (Exception e){
-                // ignore: tried to stop a non-existent preview
-            }
-
-            // set preview size and make any resize, rotate or
-            // reformatting changes here
-            int degree = getDegreeCameraDisplayOrientation(Camera.CameraInfo.CAMERA_FACING_BACK, mCamera);
-            mCamera.setDisplayOrientation(90);
-            Log.i("captura", "orientation=");
-            // start preview with new settings
-            try {
-                mCamera.setPreviewDisplay(mHolder);
-                mCamera.startPreview();
-
-            } catch (Exception e){
-                Log.d("captura", "Error starting camera preview: " + e.getMessage());
-            }
-
-        }
-
-        /**
-         * This is called immediately before a surface is being destroyed. After
-         * returning from this call, you should no longer try to access this
-         * surface.  If you have a rendering thread that directly accesses
-         * the surface, you must ensure that thread is no longer touching the
-         * Surface before returning from this function.
-         *
-         * @param holder The SurfaceHolder whose surface is being destroyed.
-         */
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            releaseCameraAndPreview();
-        }
-        public void startCameraPreview() {
-            try {
-                mCamera.setPreviewDisplay(mHolder);
-                mCamera.startPreview();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        private int getDegreeCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {
-            android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-            android.hardware.Camera.getCameraInfo(cameraId, info);
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            int degrees = 0;
-            switch (rotation) {
-                case Surface.ROTATION_0:
-                    degrees = 0;
-                    break;
-                case Surface.ROTATION_90:
-                    degrees = 90;
-                    break;
-                case Surface.ROTATION_180:
-                    degrees = 180;
-                    break;
-                case Surface.ROTATION_270:
-                    degrees = 270;
-                    break;
-            }
-
-            int result;
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                result = (info.orientation + degrees) % 360;
-                result = (360 - result) % 360; // compensate the mirror
-            } else { // back-facing
-                result = (info.orientation - degrees + 360) % 360;
-            }
-            return result;
-        }
+        Log.d("coli_pokemon",pokemon.getLeft()+" "+ pokemon.getTop()+" "+ pokemon.getRight()+" "+ pokemon.getBottom());
+        Rect R1_pokemon = new Rect(pokemonLeft, pokemonTop, pokemonRight, pokemonBottom);
+        Rect R2_pokebola = new Rect(pokebolaLeft, pokebolaRight, pokebolaRight,pokebolaBottom);
+        return R1_pokemon.contains(R2_pokebola);
     }
 };
