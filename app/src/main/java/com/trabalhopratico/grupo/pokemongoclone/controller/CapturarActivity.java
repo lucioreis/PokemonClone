@@ -26,7 +26,8 @@ import android.widget.Toast;
 import com.trabalhopratico.grupo.pokemongoclone.R;
 import com.trabalhopratico.grupo.pokemongoclone.model.Aparecimento;
 import com.trabalhopratico.grupo.pokemongoclone.util.CameraPreview;
-
+//TODO - acrescentar sons
+//TODO - colocar as duas imageviews(pokemon e
 public class CapturarActivity extends Activity implements SensorEventListener, View.OnTouchListener{
     private ImageView _pokeball, pokemon;
     private  Aparecimento aparecimento;
@@ -143,6 +144,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     private float x = 1, y = 1;
     @Override
     public void onSensorChanged(SensorEvent event) {
+        //TODO - Testar o giroscópio melhor
         float xyz[] = new float[3];
         for(int i = 0; i < 3; i++){
             xyz[i] = (float) (event.values[i]*59.2958);
@@ -224,8 +226,10 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 xf = v.getX(); yf = v.getY();
                 final long tempo = (timer_fim - timer_inicio);
 
-                final Double velocidadeX = (double)(xf - x0)/(tempo*1.25);
-                final Double velocidadeY = (double)(yf - y0)/(tempo*1.25);
+                Double velocidadeX = (double)(xf - x0)/(tempo);
+                Double velocidadeY = (double)(yf - y0)/(tempo);
+                velocidadeX = velocidadeX*(50000/larguraDaTela);
+                velocidadeY = velocidadeY*(50000/alturaDaTela);
                 int direcaoX = (velocidadeX <= 0)? -1:1;
                 int direcaoY = (velocidadeY <= 0)? -1:1;
 
@@ -274,6 +278,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 animatorSet.start();
                 _pokeball.setX(pokeballX);
                 _pokeball.setY(pokeballY);
+                //TODO - Parar a pokebola e retorna-la para a posição de começo
                 Toast.makeText(getBaseContext(), "Errou a pokebola", Toast.LENGTH_SHORT);
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -290,28 +295,28 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     }
 
     private void capituraPokemon() {
+        //TODO-Terminar aniamção de captura
         pokemon.setImageResource(R.drawable.explosion);
         pokemon.setScaleType(ImageView.ScaleType.CENTER);
         pokemon.setAdjustViewBounds(true);
+        pokemon.animate().x(pokemon.getX()).y(pokemon.getY()).setDuration(350).start();
+        pokemon.setImageResource(R.drawable.pokeball);
+        ValueAnimator animator = ValueAnimator.ofFloat(-20, 20);
 
-//        final ImageView pokeballTmp  = _pokeball;
-//        Runnable runnable = new Runnable(){
-//            @Override
-//                public void run(){
-//                    pokeballTmp.animate()
-//                        .rotation( (float)20).setDuration(300)
-//                        .rotation( (float) -40).setDuration(300)
-//                        .rotation( (float) 40 ).setDuration(300)
-//                        .rotation( (float) -20 ).setDuration(300).start();
-//                }
-//            };
-//            new Thread(runnable);
-//        try {
-//            Thread.sleep(1300);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                // 2
+                pokemon.setRotation(value);
+            }
+        });
 
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(1000);
+        animator.start();
+        animator.reverse();
+        //TODO - Persistir pokemon no banco de dados
     }
 
     public boolean checaColisao(View pokemon,View pokebola) {
