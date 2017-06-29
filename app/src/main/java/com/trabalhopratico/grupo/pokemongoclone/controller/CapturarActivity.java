@@ -1,5 +1,6 @@
 package com.trabalhopratico.grupo.pokemongoclone.controller;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -67,29 +68,20 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         else {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
         }
-
-//        getCurrentFocus()..getViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-//            public void onGlobalLayout() {
-//                getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//
-               // // all views has been placed
-                //// make your calculation now...
-//            }
-//        });
         density = getResources().getDisplayMetrics().density;
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-                pokemon.post(new Runnable() {
+            pokemon.post(new Runnable() {
             @Override
             public void run() {
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
-                alturaDaTela = size.y;
-                larguraDaTela = size.x;
+                alturaDaTela = getResources().getDisplayMetrics().heightPixels;
+                larguraDaTela = getResources().getDisplayMetrics().widthPixels;
                 coeficiente = larguraDaTela/72d;
                 float larguraImgPkm = larguraDaTela/2;
                 float proporcao = (pokemon.getMeasuredWidth())/larguraDaTela;
@@ -107,7 +99,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 _pokeball.setY(pokeballY);
                 _pokeball.setX(pokeballX);
                 Log.d("captura", pokemon.getX()+" "+ pokemon.getY() +  ' ' + pokemon.getLeft() + " " + pokemon.getRight());
-                Log.d("captura", "X x Y = " + pokemon.getHeight()+ " + " + pokemon.getWidth());
+                Log.d("captura", "X x Y = " + _pokeball.getHeight()+ " + " + _pokeball.getWidth());
             }
         });
     }
@@ -242,6 +234,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                     public void onAnimationUpdate(ValueAnimator animation) {
                         if(checaColisao(pokemon, _pokeball)){
                                 Log.d("colisaoX", "colidiu");
+                                _pokeball.setVisibility(View.GONE);
                                 capituraPokemon();
                         }else Log.d("colisaoX", "nao colidiu");
 
@@ -249,6 +242,29 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                         _pokeball.setTranslationX(f);
                     }
 
+                });
+                objectAnimatorX.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        _pokeball.setX(larguraDaTela/2 - _pokeball.getWidth()/2);
+                        _pokeball.setY(alturaDaTela - _pokeball.getHeight());
+                        _pokeball.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
                 });
                 final ValueAnimator objectAnimatorY = ObjectAnimator.ofFloat(_pokeball, "translationY",
                          v.getY(), direcaoY*alturaDaTela);
@@ -276,8 +292,6 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 AnimatorSet animatorSet = new AnimatorSet();
                 animatorSet.play(objectAnimatorX).with(objectAnimatorY);
                 animatorSet.start();
-                _pokeball.setX(pokeballX);
-                _pokeball.setY(pokeballY);
                 //TODO - Parar a pokebola e retorna-la para a posição de começo
                 Toast.makeText(getBaseContext(), "Errou a pokebola", Toast.LENGTH_SHORT);
                 break;
@@ -296,11 +310,15 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
 
     private void capituraPokemon() {
         //TODO-Terminar aniamção de captura
-        pokemon.setImageResource(R.drawable.explosion);
-        pokemon.setScaleType(ImageView.ScaleType.CENTER);
-        pokemon.setAdjustViewBounds(true);
-        pokemon.animate().x(pokemon.getX()).y(pokemon.getY()).setDuration(350).start();
-        pokemon.setImageResource(R.drawable.pokeball);
+        pokemon.setVisibility(View.INVISIBLE);
+        ImageView explosion = (ImageView) findViewById(R.id.explosao);
+        explosion.setImageResource(R.drawable.explosion);
+        explosion.setX(pokemon.getX());
+        explosion.setY(pokemon.getY());
+        explosion.animate().setDuration(1000).start();
+        final ImageView pokeball = (ImageView) findViewById(R.id.pokeball_image_view);
+        pokeball.setX(pokemon.getX() - pokemon.getWidth()/2);
+        pokeball.setY(pokemon.getY() - pokemon.getHeight()/2);
         ValueAnimator animator = ValueAnimator.ofFloat(-20, 20);
 
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -308,12 +326,12 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
                 // 2
-                pokemon.setRotation(value);
+                pokeball.setRotation(value);
             }
         });
 
         animator.setInterpolator(new LinearInterpolator());
-        animator.setDuration(1000);
+        animator.setDuration(2000);
         animator.start();
         animator.reverse();
         //TODO - Persistir pokemon no banco de dados

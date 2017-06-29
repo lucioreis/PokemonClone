@@ -308,10 +308,6 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
             //Exibe
             alerta.show();
         }
-        int i = new Random().nextInt()+1;
-        i = cg.getAparecimentos().length%i - 1;
-
-        startActivity(new Intent(this, CapturarActivity.class).putExtra("Apar", cg.getAparecimentos()[i]));
         if (!marker.getTitle().equals("Voce")) {
             final Location pontoAtual = new Location(provider);
             pontoAtual.setLatitude(aux.latitude); pontoAtual.setLongitude(aux.longitude);

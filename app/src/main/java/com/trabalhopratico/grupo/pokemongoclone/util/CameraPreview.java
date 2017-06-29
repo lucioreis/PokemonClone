@@ -183,6 +183,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             result = (360 - result) % 360; // compensate the mirror
         } else { // back-facing
             result = (info.orientation - degrees + 360) % 360;
+            result =(info.orientation);
         }
         return result;
     }
