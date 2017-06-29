@@ -39,9 +39,11 @@ import com.trabalhopratico.grupo.pokemongoclone.R;
 import com.trabalhopratico.grupo.pokemongoclone.model.Aparecimento;
 import com.trabalhopratico.grupo.pokemongoclone.model.ControladoraFachadaSingleton;
 import com.trabalhopratico.grupo.pokemongoclone.model.Usuario;
+import com.trabalhopratico.grupo.pokemongoclone.util.RandomUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MapActivity extends Activity implements OnMapReadyCallback, LocationListener, GoogleMap.OnMarkerClickListener {
 
@@ -306,6 +308,10 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
             //Exibe
             alerta.show();
         }
+        int i = new Random().nextInt()+1;
+        i = cg.getAparecimentos().length%i - 1;
+
+        startActivity(new Intent(this, CapturarActivity.class).putExtra("Apar", cg.getAparecimentos()[i]));
         if (!marker.getTitle().equals("Voce")) {
             final Location pontoAtual = new Location(provider);
             pontoAtual.setLatitude(aux.latitude); pontoAtual.setLongitude(aux.longitude);
@@ -313,7 +319,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
             pontoPokemon.setLatitude(marker.getPosition().latitude); pontoPokemon.setLongitude(marker.getPosition().longitude);
 
             Log.i("THREAD", aux.latitude+" "+aux.longitude + " " + marker.getPosition().latitude + " " + marker.getPosition().longitude + " " + pontoAtual.distanceTo(pontoPokemon));
-            if (pontoAtual.distanceTo(pontoPokemon)/1000000 > 0.000004*10) {
+            if (false && pontoAtual.distanceTo(pontoPokemon)/1000000 > 0.000004*10) {
                 Toast.makeText(this,"Aproxime-se " + (pontoAtual.distanceTo(pontoAtual)/1000000 - 40) + " metros para batalhar",Toast.LENGTH_SHORT).show();
                 Log.i("THREAD", " NAO PASSOU");
             } else {

@@ -24,7 +24,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private View mPreview;
 
-    public CameraPreview(Context context, Camera camera) {
+    public CameraPreview(Context context) {
         super(context);
         mCamera = getCameraInstance();
         mHolder = getHolder();
@@ -75,7 +75,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-    private boolean safeCameraOpenInView(View view){
+    public boolean safeCameraOpenInView(View view){
         boolean qOpened = false;
         releaseCameraAndPreview();
         mCamera = getCameraInstance();
@@ -83,25 +83,25 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         qOpened = (mCamera != null);
 
         if(qOpened == true){
-            mPreview = new CameraPreview(MyApp.getContext(), mCamera);
-           // SurfaceView preview = (SurfaceView) view.findViewById(R.id.camera);
+            mPreview = new CameraPreview(MyApp.getContext());
+            SurfaceView preview = (SurfaceView) view.findViewById(R.id.camera_surface_view);
 
-            //setHolder(preview);
+             setHolder(preview);
             startCameraPreview();
         }
         return qOpened;
     }
 
     /**
-     * This is called immediately after any structural changes (format or
-     * size) have been made to the surface.  You should at this point update
-     * the imagery in the surface.  This method is always called at least
-     * once, after {@link #surfaceCreated}.
+     * this is called immediately after any structural changes (format or
+     * size) have been made to the surface.  you should at this point update
+     * the imagery in the surface.  this method is always called at least
+     * once, after {@link #surfacecreated}.
      *
-     * @param holder The SurfaceHolder whose surface has changed.
-     * @param format The new PixelFormat of the surface.
-     * @param width  The new width of the surface.
-     * @param height The new height of the surface.
+     * @param holder the surfaceholder whose surface has changed.
+     * @param format the new pixelformat of the surface.
+     * @param width  the new width of the surface.
+     * @param height the new height of the surface.
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -123,7 +123,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // set preview size and make any resize, rotate or
         // reformatting changes here
         int degree = getDegreeCameraDisplayOrientation(Camera.CameraInfo.CAMERA_FACING_BACK, mCamera);
-        mCamera.setDisplayOrientation(90);
+        mCamera.setDisplayOrientation(degree);
         Log.i("captura", "orientation=");
         // start preview with new settings
         try {

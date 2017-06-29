@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.CapturarActivity">
-    <fragment
-        android:name="com.trabalhopratico.grupo.pokemongoclone.controller.CameraSurfaceView"
+    <SurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/cameraFragment"/>
+        android:id="@+id/camera_surface_view"
+        />
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
