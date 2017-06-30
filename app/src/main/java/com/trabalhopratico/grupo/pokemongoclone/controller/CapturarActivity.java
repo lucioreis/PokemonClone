@@ -1,6 +1,7 @@
 package com.trabalhopratico.grupo.pokemongoclone.controller;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -15,12 +16,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.renderscript.Double2;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,7 +35,7 @@ import com.trabalhopratico.grupo.pokemongoclone.util.CameraPreview;
 //TODO - acrescentar sons
 //TODO - colocar as duas imageviews(pokemon e
 public class CapturarActivity extends Activity implements SensorEventListener, View.OnTouchListener{
-    private ImageView _pokeball, pokemon;
+    private ImageView _pokeball, pokemon, explosion;
     private  Aparecimento aparecimento;
     private Intent it;
     private Sensor sensor;
@@ -43,23 +48,22 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     private int larguraDaTela, alturaDaTela;
     private float dx, dy,centerX, centerY, pokeballX, pokeballY;
     private float density;
-    FragmentTransaction fragmentTransaction;
     CameraPreview cameraSurfaceView;
+    boolean capiturou = false;
+    boolean  a = false, s = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capturar);
         cameraSurfaceView = new CameraPreview(this);
-        cameraSurfaceView.safeCameraOpenInView(findViewById(R.id.camera_surface_view));
         it = getIntent();
         aparecimento = (Aparecimento) it.getSerializableExtra("Apar");
-        pokemon = (ImageView) findViewById(R.id.pokemon);
-        pokemon.setImageResource(aparecimento.getPokemon().getFoto());
-
         _pokeball = (ImageView) findViewById(R.id.pokeball_image_view);
         _pokeball.setImageResource(R.drawable.pokeball);
         _pokeball.setOnTouchListener(this);
+        pokemon = (ImageView) findViewById(R.id.pokemon);
+        pokemon.setImageResource(aparecimento.getPokemon().getFoto());
 
         Log.i("captura", getResources().getResourceEntryName( aparecimento.getPokemon().getFoto()));
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -74,34 +78,53 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     @Override
     protected void onResume(){
         super.onResume();
-            pokemon.post(new Runnable() {
+        Display display = getWindowManager().getDefaultDisplay();
+        final Point size = new Point();
+        display.getSize(size);
+        alturaDaTela = size.y;
+        larguraDaTela = size.x;
+        cameraSurfaceView.safeCameraOpenInView(findViewById(R.id.camera_surface_view));
+
+        pokemon.post(new Runnable() {
             @Override
             public void run() {
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                alturaDaTela = getResources().getDisplayMetrics().heightPixels;
-                larguraDaTela = getResources().getDisplayMetrics().widthPixels;
+
+                /*alturaDaTela = getResources().getDisplayMetrics().heightPixels;
+                larguraDaTela = getResources().getDisplayMetrics().widthPixels;*/
+                Log.i("Dimensao", "A: " + alturaDaTela + " L: " + larguraDaTela);
+
                 coeficiente = larguraDaTela/72d;
                 float larguraImgPkm = larguraDaTela/2;
                 float proporcao = (pokemon.getMeasuredWidth())/larguraDaTela;
-                float alturaImgPkm = pokemon.getMeasuredHeight()*proporcao/2;
+                float alturaImgPkm = pokemon.getHeight()*proporcao/2;
                 centerX = larguraDaTela/2 - (((int) larguraImgPkm)/2);
                 centerY = alturaDaTela/2  - (((int) alturaImgPkm)/2);
                 pokemon.getLayoutParams().height = (int) alturaImgPkm;
                 pokemon.getLayoutParams().width = (int) larguraImgPkm;
-                pokemon.setX(centerX);// - pokemon.getWidth()/2);
-                pokemon.setY(centerY);
-                _pokeball.getLayoutParams().height = (int)(alturaDaTela*0.15);
-                _pokeball.getLayoutParams().width = (int)(alturaDaTela*0.15);
-                pokeballX = larguraDaTela/2 - _pokeball.getWidth()/2;
-                pokeballY = alturaDaTela - _pokeball.getHeight();
-                _pokeball.setY(pokeballY);
-                _pokeball.setX(pokeballX);
+               // pokemon.setX(centerX);// - pokemon.getWidth()/2);
+               // pokemon.setY(centerY);
+
+                Log.i("Dimensao", "Posicao pkmn - X: " + pokemon.getX() + " Y: " + pokemon.getY());
+                a = true;
+            }
+            });
+        _pokeball.post(new Runnable() {
+            @Override
+            public void run() {
+                _pokeball.getLayoutParams().height = (int)(larguraDaTela*(float)0.15);
+                _pokeball.getLayoutParams().width = (int)(larguraDaTela*(float)0.15);
+                Log.i("Dimensao", "MW: " + _pokeball.getMeasuredWidth() + " MH: " + _pokeball.getMeasuredHeight());
+                //_pokeball.setY(pokeballY);
+                //_pokeball.setX(pokeballX);
+                s = true;
                 Log.d("captura", pokemon.getX()+" "+ pokemon.getY() +  ' ' + pokemon.getLeft() + " " + pokemon.getRight());
-                Log.d("captura", "X x Y = " + _pokeball.getHeight()+ " + " + _pokeball.getWidth());
+                Log.d("captura", "X x Y = " + _pokeball.getMeasuredHeight()+ " + " + _pokeball.getMeasuredWidth());
+
+                Log.i("Dimensao", "Posicao pokebola - X: " + _pokeball.getX() + " Y: " + _pokeball.getY());
             }
         });
+
+
     }
 
     @Override
@@ -136,6 +159,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     private float x = 1, y = 1;
     @Override
     public void onSensorChanged(SensorEvent event) {
+        //if(!(a && s)) return;
         //TODO - Testar o giroscópio melhor
         float xyz[] = new float[3];
         for(int i = 0; i < 3; i++){
@@ -162,9 +186,9 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         if(pokemon.hasWindowFocus()) {
 //            pokemon.setX((float) (grausTotais[1] * coeficiente));
 //            pokemon.setY((float) (grausTotais[0] * coeficiente));
-//            pokemon.setRotation(grausTotais[2]);
-            float d = pokemon.getX()+(float) (grausTotais[1]*coeficiente);
-            float e = pokemon.getY()+(float) (grausTotais[0]*coeficiente);
+            pokemon.setRotation(grausTotais[2]);
+            float d = (float) (grausTotais[1]*coeficiente);
+            float e = (float) (grausTotais[0]*coeficiente);
             pokemon.animate()
                     .x(d)
                     .y(e)
@@ -215,85 +239,9 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 timer_fim = System.currentTimeMillis();
-                xf = v.getX(); yf = v.getY();
                 final long tempo = (timer_fim - timer_inicio);
-
-                Double velocidadeX = (double)(xf - x0)/(tempo);
-                Double velocidadeY = (double)(yf - y0)/(tempo);
-                velocidadeX = velocidadeX*(50000/larguraDaTela);
-                velocidadeY = velocidadeY*(50000/alturaDaTela);
-                int direcaoX = (velocidadeX <= 0)? -1:1;
-                int direcaoY = (velocidadeY <= 0)? -1:1;
-
-                final ValueAnimator objectAnimatorX = ObjectAnimator.ofFloat(_pokeball, "translationX",
-                                                    v.getX(), direcaoX*larguraDaTela);
-                Long tempoDeTransicaoX = ((larguraDaTela/velocidadeX) < 50) ? 50 : (long) Math.abs(larguraDaTela/velocidadeX);
-                objectAnimatorX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
-
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        if(checaColisao(pokemon, _pokeball)){
-                                Log.d("colisaoX", "colidiu");
-                                _pokeball.setVisibility(View.GONE);
-                                capituraPokemon();
-                        }else Log.d("colisaoX", "nao colidiu");
-
-                        float f = (float) animation.getAnimatedValue();
-                        _pokeball.setTranslationX(f);
-                    }
-
-                });
-                objectAnimatorX.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        _pokeball.setX(larguraDaTela/2 - _pokeball.getWidth()/2);
-                        _pokeball.setY(alturaDaTela - _pokeball.getHeight());
-                        _pokeball.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-                final ValueAnimator objectAnimatorY = ObjectAnimator.ofFloat(_pokeball, "translationY",
-                         v.getY(), direcaoY*alturaDaTela);
-                Long tempoDeTransicaoY = ((larguraDaTela/velocidadeX) < 50) ? 50 : (long) Math.abs(larguraDaTela/velocidadeX);
-                objectAnimatorY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
-
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        if(checaColisao(pokemon, _pokeball)){
-                            Log.d("colisaoY", "colidiu");
-                            capituraPokemon();
-                        }else Log.d("colisaoY", "nao colidiu");
-
-                        float f = (float) animation.getAnimatedValue();
-                        _pokeball.setTranslationY(f);
-
-                    }
-
-                });
-                Log.d("velocidade", "vel= "+velocidadeX+" tempTX= "+tempoDeTransicaoX+" tempTY= "+tempoDeTransicaoY+" tempo(s)= "+tempo/1000+" larguraDaTela= "+larguraDaTela);
-                objectAnimatorX.setInterpolator(new LinearInterpolator());
-                objectAnimatorY.setInterpolator(new LinearInterpolator());
-                objectAnimatorX.setDuration(tempoDeTransicaoX);
-                objectAnimatorY.setDuration(tempoDeTransicaoY);
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.play(objectAnimatorX).with(objectAnimatorY);
-                animatorSet.start();
-                //TODO - Parar a pokebola e retorna-la para a posição de começo
-                Toast.makeText(getBaseContext(), "Errou a pokebola", Toast.LENGTH_SHORT);
+                xf = v.getX(); yf = v.getY();
+                animacaoDeLanamento(tempo, v);
                 break;
             case MotionEvent.ACTION_MOVE:
                 v.animate()
@@ -308,33 +256,116 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         return true;
     }
 
-    private void capituraPokemon() {
-        //TODO-Terminar aniamção de captura
-        pokemon.setVisibility(View.INVISIBLE);
-        ImageView explosion = (ImageView) findViewById(R.id.explosao);
-        explosion.setImageResource(R.drawable.explosion);
-        explosion.setX(pokemon.getX());
-        explosion.setY(pokemon.getY());
-        explosion.animate().setDuration(1000).start();
-        final ImageView pokeball = (ImageView) findViewById(R.id.pokeball_image_view);
-        pokeball.setX(pokemon.getX() - pokemon.getWidth()/2);
-        pokeball.setY(pokemon.getY() - pokemon.getHeight()/2);
-        ValueAnimator animator = ValueAnimator.ofFloat(-20, 20);
+    public void animacaoDeLanamento(Long tempo, View v){
+        Double velocidadeX = (double)(xf - x0)/(tempo);
+        Double velocidadeY = (double)(yf - y0)/(tempo);
+//                velocidadeX = velocidadeX*(50000/larguraDaTela);
+//                velocidadeY = velocidadeY*(50000/alturaDaTela);
+        int direcaoX = (velocidadeX <= 0)? -1:1;
+        int direcaoY = (velocidadeY <= 0)? -1:1;
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        final ValueAnimator objectAnimatorX = ObjectAnimator.ofFloat(_pokeball, "translationX",
+                v.getX(), direcaoX*larguraDaTela);
+        Long tempoDeTransicaoX = ((larguraDaTela/velocidadeX) < 50) ? 50 : (long) Math.abs(larguraDaTela/velocidadeX);
+        objectAnimatorX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
+
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                // 2
-                pokeball.setRotation(value);
+                if(checaColisao(pokemon, _pokeball)){
+                    Log.d("colisaoX", "colidiu");
+                    _pokeball.setVisibility(View.INVISIBLE);
+                    capiturou = capituraPokemon();
+                }else Log.d("colisaoX", "nao colidiu");
+
+                float f = (float) animation.getAnimatedValue();
+                _pokeball.setTranslationX(f);
+            }
+
+        });
+        objectAnimatorX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                _pokeball.setX(larguraDaTela/2 - _pokeball.getWidth()/2);
+                _pokeball.setY(alturaDaTela - _pokeball.getHeight() - 50);
+                _pokeball.setVisibility(View.VISIBLE);
             }
         });
+        final ValueAnimator objectAnimatorY = ObjectAnimator.ofFloat(_pokeball, "translationY",
+                v.getY(), direcaoY*alturaDaTela);
+        Long tempoDeTransicaoY = ((larguraDaTela/velocidadeY) < 50) ? 50 : (long) Math.abs(larguraDaTela/velocidadeX);
+        objectAnimatorY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
 
-        animator.setInterpolator(new LinearInterpolator());
-        animator.setDuration(2000);
-        animator.start();
-        animator.reverse();
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if(checaColisao(pokemon, _pokeball)){
+                    Log.d("colisaoY", "colidiu");
+                    capiturou = capituraPokemon();
+                }else Log.d("colisaoY", "nao colidiu");
+
+                float f = (float) animation.getAnimatedValue();
+                _pokeball.setTranslationY(f);
+
+            }
+
+        });
+        objectAnimatorY.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                _pokeball.setX(larguraDaTela/2 - _pokeball.getWidth()/2);
+                _pokeball.setY(alturaDaTela - _pokeball.getHeight() - 50);
+                _pokeball.setVisibility(View.VISIBLE);
+            }
+        });
+        Log.d("velocidade", "vel= "+velocidadeX+" tempTX= "+tempoDeTransicaoX+" tempTY= "+tempoDeTransicaoY+" tempo(s)= "+tempo/1000+" larguraDaTela= "+larguraDaTela);
+        objectAnimatorX.setInterpolator(new LinearInterpolator());
+        objectAnimatorY.setInterpolator(new LinearInterpolator());
+        objectAnimatorX.setDuration(tempoDeTransicaoX);
+        objectAnimatorY.setDuration(tempoDeTransicaoY);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(objectAnimatorX).with(objectAnimatorY);
+        animatorSet.start();
+        //TODO - Parar a pokebola e retorna-la para a posição de começo
+        if(!capiturou)
+            Toast.makeText(getBaseContext(), "Errou a pokebola", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean capituraPokemon() {
+        //TODO-Terminar aniamção de captura
+        pokemon.setVisibility(View.INVISIBLE);
+        _pokeball.setX(pokemon.getX() - pokemon.getWidth() / 2);
+        _pokeball.setY(pokemon.getY() - pokemon.getHeight() / 2);
+        explosion = (ImageView) findViewById(R.id.explosao);
+        explosion.setImageResource(R.drawable.explosion);
+        final Handler handler = new Handler();
+        final Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                explosion.setVisibility(View.INVISIBLE);
+            }
+        };
+        explosion.animate().setDuration(350).start();
+        explosion.postDelayed(task, 350);
+        final Runnable task2 = new Runnable() {
+            @Override
+            public void run() {
+                AnimationSet animatorSet = new AnimationSet(true);
+                RotateAnimation rotateAnimation = new RotateAnimation(340, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotateAnimation.setDuration(350);
+                RotateAnimation rotateAnimation1 = new RotateAnimation(0, 20, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotateAnimation1.setDuration(700);
+                RotateAnimation rotateAnimation2 = new RotateAnimation(20, -20, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotateAnimation1.setDuration(350);
+                animatorSet.setInterpolator(new LinearInterpolator());
+                animatorSet.addAnimation(rotateAnimation1);
+                animatorSet.addAnimation(rotateAnimation2);
+                animatorSet.addAnimation(rotateAnimation1);
+                _pokeball.startAnimation(animatorSet);
+            }
+        };
+        _pokeball.postDelayed(task2, 351);
+        _pokeball.postDelayed(task2, 1751);
         //TODO - Persistir pokemon no banco de dados
+        return true;
     }
 
     public boolean checaColisao(View pokemon,View pokebola) {
