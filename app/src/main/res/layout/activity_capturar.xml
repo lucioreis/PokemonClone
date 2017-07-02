@@ -19,15 +19,37 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="centerInside"
+        android:scaleType="fitXY"
         android:adjustViewBounds="true"
-        android:background="@color/azul"
-        android:layout_gravity="center"
         android:id="@+id/pokemon"/>
+
+    <TextView
+        android:id="@+id/pokemon_novo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="10dp"
+        android:background="@color/red_my"
+        android:radius="40dp"
+        android:text="Novo"
+        android:textSize="14sp"
+        android:textColor="@color/branco" />
+
+    <TextView
+        android:id="@+id/nome_do_pokemon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="10dp"
+        android:background="@color/branco"
+        android:alpha="0.8"
+        android:radius="40dp"
+        android:text="NomeDoPokemon"
+        android:textSize="14sp"
+        android:textColor="@color/preto" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pokeball_image_view"
-        android:layout_gravity="bottom|center_horizontal"/>
-
+        android:layout_gravity="center|bottom"
+        android:id="@+id/pokeball_image_view"/>
 </FrameLayout>

@@ -24,8 +24,7 @@ public class Usuario {
 
     }
 
-    public boolean capiturar(Aparecimento pkmn){
-
+    public boolean capturar(Aparecimento pkmn){
         return false;
     }
 
