@@ -1,5 +1,12 @@
 package com.trabalhopratico.grupo.pokemongoclone.model;
 
+import android.content.ContentValues;
+
+import com.trabalhopratico.grupo.pokemongoclone.util.BancoDadosSingleton;
+import com.trabalhopratico.grupo.pokemongoclone.util.TimeUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +30,31 @@ public class Usuario {
     private void preencheCapturas(){
 
     }
-
+    //TODO - Checar como será persistido a captura do poemon
     public boolean capturar(Aparecimento pkmn){
+        if(pokemons == null) pokemons = new HashMap<>();
+        TimeUtil timeUtil = new TimeUtil();
+        Map<String, String> data = timeUtil.getHoraMinutoSegundoDiaMesAno();
+        PokemomCapturado pokemomCapturado = new PokemomCapturado();
+        pokemomCapturado.setDtCaptura(data.get("mes")+"/"+data.get("dia")+"/"+data.get("ano"));
+        pokemomCapturado.setLatitude(pkmn.getLatitude());
+        pokemomCapturado.setLongitude(pkmn.getLongitude());
+        List<PokemomCapturado> tmp;
+        tmp = pokemons.get(pkmn.getPokemon());
+        if(tmp == null) tmp = new ArrayList<>();
+        tmp.add(pokemomCapturado);
+        pokemons.put(pkmn.getPokemon(), tmp);
+
+        //Nao sei se isso fica aqui
+//        BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put("login", getLogin());
+//        contentValues.put("idPokemon", pkmn.getPokemon().getNumero());
+//        contentValues.put("latitue", pkmn.getLatitude());
+//        contentValues.put("longitude", pkmn.getLongitude());
+//        contentValues.put("dtCaptura", data.get("mes")+"/"+data.get("dia")+"/"+data.get("ano"));
+//        bd.inserir("pokemonususario", contentValues);
+
         return false;
     }
 
