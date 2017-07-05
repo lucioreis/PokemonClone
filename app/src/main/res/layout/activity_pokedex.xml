@@ -7,17 +7,14 @@
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.PokedexActivity">
 
 
-
-
-        <ListView
-            android:id="@+id/lstPokemons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="#efefef">
-        </ListView>
-
+                <ListView
+                    android:id="@+id/lstPokemons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="#efefef">
+                </ListView>
 
 
 </android.support.constraint.ConstraintLayout>
