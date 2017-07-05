@@ -82,7 +82,7 @@ public final class ControladoraFachadaSingleton implements Serializable{
         }
     }
 
-    private List<Pokemon> getPokemon() {
+    public List<Pokemon> getPokemon() {
         List<Pokemon> list = pokemons.get("C");
         list.addAll(pokemons.get("I"));
         list.addAll(pokemons.get("R"));

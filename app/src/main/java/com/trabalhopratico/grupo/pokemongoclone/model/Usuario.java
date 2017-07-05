@@ -1,6 +1,7 @@
 package com.trabalhopratico.grupo.pokemongoclone.model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.trabalhopratico.grupo.pokemongoclone.util.BancoDadosSingleton;
 import com.trabalhopratico.grupo.pokemongoclone.util.TimeUtil;
@@ -28,8 +29,21 @@ public class Usuario {
     }
 
     private void preencheCapturas(){
+        BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
+        String[] colunas = {"p.idPokemon idPkmn","p.nome","p.categoria","p.foto","p.icone","pu.dtCaptura","pu.latitude","pu.longitude"};
+        String where = "pu.login = u.login and pu.idPokemon = p.idPokemon";
+        String orderBy = "p.idPokemon";
+        Cursor c = bd.buscar("pokemon p, usuario u, pokemonusuario pu", colunas, where, orderBy);
+        ControladoraFachadaSingleton instance = ControladoraFachadaSingleton.getInstance();
+        List<Pokemon> listpkmn  = instance.getPokemon();
+        while (c.moveToNext()) {
+            for(Pokemon p : listpkmn) {
+                int num = p.getNumero();
 
+            }
+        }
     }
+
     //TODO - Checar como será persistido a captura do poemon
     public boolean capturar(Aparecimento pkmn){
         if(pokemons == null) pokemons = new HashMap<>();
