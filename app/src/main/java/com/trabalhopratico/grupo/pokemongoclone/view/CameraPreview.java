@@ -1,4 +1,4 @@
-package com.trabalhopratico.grupo.pokemongoclone.util;
+package com.trabalhopratico.grupo.pokemongoclone.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,10 +8,9 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.trabalhopratico.grupo.pokemongoclone.R;
-import com.trabalhopratico.grupo.pokemongoclone.controller.CapturarActivity;
+import com.trabalhopratico.grupo.pokemongoclone.util.MyApp;
 
 import java.io.IOException;
 

@@ -13,13 +13,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +29,7 @@ import com.trabalhopratico.grupo.pokemongoclone.R;
 import com.trabalhopratico.grupo.pokemongoclone.model.Aparecimento;
 import com.trabalhopratico.grupo.pokemongoclone.model.ControladoraFachadaSingleton;
 import com.trabalhopratico.grupo.pokemongoclone.model.Usuario;
-import com.trabalhopratico.grupo.pokemongoclone.util.CameraPreview;
-
-import org.w3c.dom.Text;
+import com.trabalhopratico.grupo.pokemongoclone.view.CameraPreview;
 
 //TODO - acrescentar sons(Musica de batalha, quick da pokebola e pokemon capiturado)
 //TODO - consulta ao panco de dados para saber se o pokemon é novo
@@ -41,6 +40,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     private  Aparecimento aparecimento;
     private Intent it;
     private Sensor sensor;
+    private MediaPlayer mp;
     private SensorManager sensorManager;
     private float grausNovos[] = new float[3];
     private float grausTotais[] = new float[3];
@@ -51,6 +51,8 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     private float dx, dy,centerX, centerY, pokeballX, pokeballY;
     private float density;
     CameraPreview cameraSurfaceView;
+    float alturaImgPkm;
+    float larguraImgPkm;
     boolean capiturou = false;
     private final int DESCE = 1, SOBE = -1, DIREITA = 1, ESQUERDA = -1;
     private float POKEBALL_X_INICIAL, POKEBALL_Y_INICIAL;
@@ -92,8 +94,12 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         alturaDaTela = size.y;
         larguraDaTela = size.x;
 
-        cameraSurfaceView.safeCameraOpenInView(findViewById(R.id.camera_surface_view));
+        mp = MediaPlayer.create(this, R.raw.battle);
+        mp.setLooping(true);
+        mp.setVolume(0.1f, 0.1f);
+        mp.start();
 
+        cameraSurfaceView.safeCameraOpenInView(findViewById(R.id.camera_surface_view));
         pokemon.post(new Runnable() {
             @Override
             public void run() {
@@ -102,9 +108,9 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 TextView nomeDoPokemon = (TextView) findViewById(R.id.nome_do_pokemon);
                 nomeDoPokemon.setText(aparecimento.getPokemon().getNome());
                 coeficiente = larguraDaTela/72d;
-                float larguraImgPkm = larguraDaTela/2;
+                larguraImgPkm = larguraDaTela/2;
                 float proporcao = (pokemon.getMeasuredWidth())/larguraDaTela;
-                float alturaImgPkm = pokemon.getMeasuredHeight()*proporcao/2;
+                alturaImgPkm = pokemon.getMeasuredHeight()*proporcao/2;
 
                 pokemon.getLayoutParams().height = (int) (alturaImgPkm);
                 pokemon.getLayoutParams().width = (int) (larguraImgPkm);
@@ -130,7 +136,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 _pokeball.getLayoutParams().height = (int)(larguraDaTela*(float)0.15);
                 _pokeball.getLayoutParams().width = (int)(larguraDaTela*(float)0.15);
                 _pokeball.setX(larguraDaTela/2 - _pokeball.getWidth()/2);
-                _pokeball.setY(alturaDaTela - _pokeball.getHeight());
+                _pokeball.setY(alturaDaTela - _pokeball.getHeight() - 100);
                 Log.i("Dimensao", "MW: " + _pokeball.getMeasuredWidth() + " MH: " + _pokeball.getMeasuredHeight());
                 Log.d("captura", pokemon.getX()+" "+ pokemon.getY() +  ' ' + pokemon.getLeft() + " " + pokemon.getRight());
                 Log.d("captura", "X x Y = " + _pokeball.getMeasuredHeight()+ " + " + _pokeball.getMeasuredWidth());
@@ -156,6 +162,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     @Override
     protected void onPause(){
         super.onPause();
+        mp.pause();
         sensorManager.unregisterListener(this);
     }
 
@@ -270,6 +277,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 timer_fim = System.currentTimeMillis();
                 final long tempo = (timer_fim - timer_inicio);
                 xf = v.getX(); yf = v.getY();
+                MediaPlayer.create(this, R.raw.arremesso).start();
                 animacaoDeLancamento(tempo);
                 break;
 
@@ -387,8 +395,8 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         final int pokemonAltura = pokemon.getHeight();
         final int pokemonLargura = pokemon.getWidth();
 
-        _pokeball.setX(pokemon.getX() + pokemon.getWidth()/2);
-        _pokeball.setY(pokemon.getY() + pokemon.getHeight()/2);
+        _pokeball.setX(pokemon.getX() + larguraImgPkm/2);
+        _pokeball.setY(pokemon.getY() - larguraImgPkm/2);
         _pokeball.invalidate();
         Log.d("pokemon coord","x = "+pokemonX+ "y= "+pokemonY + "altura= "+pokemonAltura+" largura="+pokemonLargura);
 
@@ -402,10 +410,18 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
             }
         }, 350);
 
+        Runnable sound = new Runnable() {
+            @Override
+            public void run() {
+                MediaPlayer.create(getBaseContext(), R.raw.quicando).start();
+            }
+        };
         ValueAnimator rotate = ObjectAnimator.ofFloat(_pokeball, "Rotation", 0, -20, 0, 20, 0, -20, 0, 0);
         rotate.setDuration(3500).setStartDelay(351);
         rotate.start();
-
+        _pokeball.postDelayed(sound, 851);
+        _pokeball.postDelayed(sound, 1851);
+        _pokeball.postDelayed(sound, 2851);
         pokemon.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -417,8 +433,14 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 finish();
 
             }
-        },3600);
-
+        },6000);
+        pokemon.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mp.pause();
+                MediaPlayer.create(getBaseContext(), R.raw.sucesso).start();
+            }
+        }, 3000);
         return true;
     }
 
