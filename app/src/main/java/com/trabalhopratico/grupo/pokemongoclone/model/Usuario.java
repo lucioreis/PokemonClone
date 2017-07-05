@@ -1,5 +1,9 @@
 package com.trabalhopratico.grupo.pokemongoclone.model;
 
+import android.database.Cursor;
+
+import com.trabalhopratico.grupo.pokemongoclone.util.BancoDadosSingleton;
+
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +25,12 @@ public class Usuario {
     }
 
     private void preencheCapturas(){
-
+        BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
+        String[] colunas = {"idPokemon","nome","categoria","foto","icone"};
+        String where = "u.login = pu.login and p.idPokemon = pu.idPokemon";
+        String orderBy = "p.idPokemon";
+        Cursor c = bd.buscar("pokemon p, usuario u, pokemonusuario pu",colunas,where,orderBy);
+        ControladoraFachadaSingleton instance = ControladoraFachadaSingleton.getInstance();
     }
 
     public boolean capturar(Aparecimento pkmn){
