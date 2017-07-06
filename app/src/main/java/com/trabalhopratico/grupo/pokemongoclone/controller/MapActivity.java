@@ -319,7 +319,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
             pontoPokemon.setLatitude(marker.getPosition().latitude); pontoPokemon.setLongitude(marker.getPosition().longitude);
 
             Log.i("THREAD", aux.latitude+" "+aux.longitude + " " + marker.getPosition().latitude + " " + marker.getPosition().longitude + " " + pontoAtual.distanceTo(pontoPokemon));
-            if (false && pontoAtual.distanceTo(pontoPokemon)/1000000 > 0.000004*10) {
+            if (pontoAtual.distanceTo(pontoPokemon)/1000000 > 0.000004*10) {
                 Toast.makeText(this,"Aproxime-se " + (pontoAtual.distanceTo(pontoAtual)/1000000 - 40) + " metros para batalhar",Toast.LENGTH_SHORT).show();
                 Log.i("THREAD", " NAO PASSOU");
             } else {
@@ -329,6 +329,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
                     if (marker.getTitle().equals(a.getPokemon().getNome())) {
                         Log.i("Apareceu", a.getPokemon().getNome());
                         it.putExtra("Apar", a);
+                        //marker.remove();
                         break;
                     }
                 }
