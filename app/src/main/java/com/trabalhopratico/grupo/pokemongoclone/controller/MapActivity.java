@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.trabalhopratico.grupo.pokemongoclone.R;
 import com.trabalhopratico.grupo.pokemongoclone.model.Aparecimento;
 import com.trabalhopratico.grupo.pokemongoclone.model.ControladoraFachadaSingleton;
+import com.trabalhopratico.grupo.pokemongoclone.model.Pokemon;
 import com.trabalhopratico.grupo.pokemongoclone.model.Usuario;
 import com.trabalhopratico.grupo.pokemongoclone.util.RandomUtil;
 
@@ -165,10 +166,10 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
     }
 
     public void mapaCapturas(View v) {
-        Intent it = new Intent(this, CapturasActivity.class);
-        ListaCapturas lc = new ListaCapturas();
-        lc.setPokemons(cg.getUser().getPokemons());
-        it.putExtra("lista",lc);
+        Intent it = new Intent(getBaseContext(), CapturasActivity.class);
+        Pokemon pokemon = new Pokemon();
+        pokemon.setNumero(0);
+        it.putExtra("pokemon", pokemon);
         startActivity(it);
     }
 

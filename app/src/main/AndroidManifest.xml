@@ -77,6 +77,11 @@ package="com.trabalhopratico.grupo.pokemongoclone">
         android:theme="@android:style/Theme.NoTitleBar"
         android:screenOrientation="portrait"/>
 
+    <activity android:name=".controller.CapturasActivity"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:screenOrientation="portrait">
+    </activity>
+
     <meta-data
         android:name="com.google.android.maps.v2.API_KEY"
         android:value="AIzaSyCc2UegxlWah9XbDNQkK3pBx92yLb8sRxI"
