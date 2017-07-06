@@ -126,7 +126,7 @@ public class Usuario {
         if(pkmn == null) return 0;
         if(pokemons == null) return 0;
         if(pokemons.get(pkmn) == null){
-            Log.i("Teste22", 0+"");
+            Log.i("Teste22", 0 + "");
             return 0;
         } else {
             Log.i("Teste22", pokemons.get(pkmn).size() + "");
