@@ -73,13 +73,16 @@ package="com.trabalhopratico.grupo.pokemongoclone">
                 android:screenOrientation="portrait">
     </activity>
 
-    <activity android:name=".controller.PokedexActivity" />
+    <activity android:name=".controller.PokedexActivity"
+        android:theme="@android:style/Theme.NoTitleBar"
+        android:screenOrientation="portrait"/>
 
     <meta-data
         android:name="com.google.android.maps.v2.API_KEY"
-        android:value="AIzaSyD3YMTzTQ7lHyNi-j8GHaDIueB2LrGsDgw"
+        android:value="AIzaSyCc2UegxlWah9XbDNQkK3pBx92yLb8sRxI"
        />
-    <!-- android:value="AIzaSyBorpWxtsOX3mmfcYsOAh4MexuQ5HsgTvY"-->
+    <!--
+        android:value="AIzaSyCJmcH8Pw1oFrsCJcla1wlRuquiV75A6oY" -->
         />
 </application>
 

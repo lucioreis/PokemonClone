@@ -12,6 +12,8 @@ import com.trabalhopratico.grupo.pokemongoclone.util.TimeUtil;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +83,20 @@ public final class ControladoraFachadaSingleton implements Serializable{
             user.setDtCadastro(c.getString(c.getColumnIndex("dtCadastro")));
             user.setSexo(c.getString(c.getColumnIndex("sexo")));
         }
+    }
+
+    public List<Pokemon> getPokemon() {
+        List<Pokemon> list = new ArrayList<>(pokemons.get("C"));
+        list.addAll(pokemons.get("I"));
+        list.addAll(pokemons.get("R"));
+        list.addAll(pokemons.get("L"));
+        Collections.sort(list, new Comparator<Pokemon>() {
+            @Override
+            public int compare(Pokemon o1, Pokemon o2) {
+                return o1.getNumero() - o2.getNumero();
+            }
+        });
+        return list;
     }
 
     static ControladoraFachadaSingleton getInstance() {
