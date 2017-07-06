@@ -12,6 +12,8 @@ import com.trabalhopratico.grupo.pokemongoclone.util.TimeUtil;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,6 @@ public final class ControladoraFachadaSingleton implements Serializable{
     private Map<String, List<Pokemon> > pokemons = new HashMap<String, List<Pokemon> > ();
     private Aparecimento aparecimentos[] = new Aparecimento[10];
     private List<Tipo> tiposPokemons;
-    private List<Pokemon> listPokemons;
     private static final ControladoraFachadaSingleton ourInstance = new ControladoraFachadaSingleton();
     private boolean sorteouLendario = false;
 
@@ -84,13 +85,17 @@ public final class ControladoraFachadaSingleton implements Serializable{
     }
 
     public List<Pokemon> getPokemon() {
-        if (listPokemons == null) {
-            listPokemons = new ArrayList<>(pokemons.get("C"));
-            listPokemons.addAll(pokemons.get("I"));
-            listPokemons.addAll(pokemons.get("R"));
-            listPokemons.addAll(pokemons.get("L"));
-        }
-        return listPokemons;
+        List<Pokemon> list = new ArrayList<>(pokemons.get("C"));
+        list.addAll(pokemons.get("I"));
+        list.addAll(pokemons.get("R"));
+        list.addAll(pokemons.get("L"));
+        Collections.sort(list, new Comparator<Pokemon>() {
+            @Override
+            public int compare(Pokemon o1, Pokemon o2) {
+                return o1.getNumero() - o2.getNumero();
+            }
+        });
+        return list;
     }
 
     static ControladoraFachadaSingleton getInstance() {
