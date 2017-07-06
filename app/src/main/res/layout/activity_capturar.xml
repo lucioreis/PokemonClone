@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,17 +10,19 @@
         android:layout_height="match_parent"
         android:id="@+id/camera_surface_view"
         />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/explosao"
         android:layout_gravity="center"/>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
-        android:id="@+id/pokemon"/>
+        android:scaleType="centerInside"
+        android:id="@+id/pokemon"
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/pokemon_novo"
@@ -30,9 +31,9 @@
         android:layout_gravity="top|start"
         android:layout_margin="10dp"
         android:background="@color/red_my"
-        android:radius="40dp"
+        android:radius="40sp"
         android:text="Novo"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:textColor="@color/branco" />
 
     <TextView
@@ -44,8 +45,7 @@
         android:background="@color/branco"
         android:alpha="0.8"
         android:radius="40dp"
-        android:text="NomeDoPokemon"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:textColor="@color/preto" />
     <ImageView
         android:layout_width="wrap_content"

@@ -42,6 +42,7 @@ public final class ControladoraFachadaSingleton implements Serializable{
         Log.i("CFS", "Iniciou a lista de tipos");
         daoPokemons(this);
         Log.i("CFS", "Iniciou a tabela hash de pokemons");
+        daoUsuario();
     }
 
     private void daoTipos(){
