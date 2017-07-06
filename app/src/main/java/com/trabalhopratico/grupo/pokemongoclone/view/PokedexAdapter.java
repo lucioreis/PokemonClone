@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trabalhopratico.grupo.pokemongoclone.R;
@@ -22,7 +23,7 @@ import java.util.List;
 public class PokedexAdapter extends ArrayAdapter<Pokemon> {
     private List<Pokemon> items;
 
-    ControladoraFachadaSingleton cf;
+    ControladoraFachadaSingleton cf = ControladoraFachadaSingleton.getOurInstance();
 
     public PokedexAdapter(Context context, int textViewResourceId, List<Pokemon> items) {
         super(context, textViewResourceId, items);
@@ -37,16 +38,19 @@ public class PokedexAdapter extends ArrayAdapter<Pokemon> {
             LayoutInflater vi = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.modelo_pokedex, null);
         }
+        Log.i("Teste", "Teste1");
 
         Pokemon pokemon = items.get(position);
         if (pokemon != null) {
             if(cf.getUser().getQuantidadeCapturas(pokemon) != 0) {
                 ((TextView) v.findViewById(R.id.txtNome)).setText(pokemon.getNome());
                 ((TextView) v.findViewById(R.id.txtCodigo)).setText(pokemon.getNumero());
-                //((ImageView) v.findViewById(R.id.imgCidade)).setImageResource(R.drawable.logo);
+                ((ImageView) v.findViewById(R.id.imgPokemon)).setImageResource(pokemon.getFoto());
+                Log.i("Teste", "Teste2");
             }else {
                 ((TextView) v.findViewById(R.id.txtNome)).setText("???");
-                ((TextView) v.findViewById(R.id.txtCodigo)).setText(pokemon.getNumero());
+                ((TextView) v.findViewById(R.id.txtCodigo)).setText(pokemon.getNumero()+"");
+                ((ImageView) v.findViewById(R.id.imgPokemon)).setImageResource(R.drawable.help);
             }
         }
         return v;
