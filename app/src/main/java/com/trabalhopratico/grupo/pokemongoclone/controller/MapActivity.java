@@ -165,7 +165,10 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
     }
 
     public void mapaCapturas(View v) {
-        Intent it = new Intent(this, MapCapturasActivity.class);
+        Intent it = new Intent(this, CapturasActivity.class);
+        ListaCapturas lc = new ListaCapturas();
+        lc.setPokemons(cg.getUser().getPokemons());
+        it.putExtra("lista",lc);
         startActivity(it);
     }
 
