@@ -28,6 +28,7 @@ public final class ControladoraFachadaSingleton implements Serializable{
     private Map<String, List<Pokemon> > pokemons = new HashMap<String, List<Pokemon> > ();
     private Aparecimento aparecimentos[] = new Aparecimento[10];
     private List<Tipo> tiposPokemons;
+    private List<Pokemon> listPokemons;
     private static final ControladoraFachadaSingleton ourInstance = new ControladoraFachadaSingleton();
     private boolean sorteouLendario = false;
 
@@ -83,11 +84,13 @@ public final class ControladoraFachadaSingleton implements Serializable{
     }
 
     public List<Pokemon> getPokemon() {
-        List<Pokemon> list = new ArrayList<>(pokemons.get("C"));
-        list.addAll(pokemons.get("I"));
-        list.addAll(pokemons.get("R"));
-        list.addAll(pokemons.get("L"));
-        return list;
+        if (listPokemons == null) {
+            listPokemons = new ArrayList<>(pokemons.get("C"));
+            listPokemons.addAll(pokemons.get("I"));
+            listPokemons.addAll(pokemons.get("R"));
+            listPokemons.addAll(pokemons.get("L"));
+        }
+        return listPokemons;
     }
 
     static ControladoraFachadaSingleton getInstance() {
