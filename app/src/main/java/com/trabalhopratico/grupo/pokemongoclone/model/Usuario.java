@@ -97,25 +97,35 @@ public class Usuario {
         pokemomCapturado.setLatitude(pkmn.getLatitude());
         pokemomCapturado.setLongitude(pkmn.getLongitude());
         List<PokemomCapturado> tmp;
-        tmp = pokemons.get(pkmn.getPokemon());
-        if(tmp == null) tmp = new ArrayList<>();
-        tmp.add(pokemomCapturado);
-        pokemons.put(pkmn.getPokemon(), tmp);
+        if(pokemons.get(pkmn.getPokemon()) == null) {
+            tmp = new ArrayList<PokemomCapturado>();
+            tmp.add(pokemomCapturado);
+            pokemons.put(pkmn.getPokemon(), tmp);
+        }else{
+            pokemons.get(pkmn.getPokemon()).add(pokemomCapturado);
+        }
 
         BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
         ContentValues contentValues = new ContentValues();
         contentValues.put("login", getLogin());
         contentValues.put("idPokemon", pkmn.getPokemon().getNumero());
-        contentValues.put("latitue", pkmn.getLatitude());
+        contentValues.put("latitude", pkmn.getLatitude());
         contentValues.put("longitude", pkmn.getLongitude());
         contentValues.put("dtCaptura", data.get("mes")+"/"+data.get("dia")+"/"+data.get("ano"));
-        bd.inserir("pokemonususario", contentValues);
+        bd.inserir("pokemonusuario", contentValues);
 
         return false;
     }
 
     public int getQuantidadeCapturas(Pokemon pkmn){
-        return pokemons.get(pkmn).size();
+        if(pkmn == null) return 0;
+        if(pokemons.get(pkmn) == null){
+            Log.i("Teste22", 0+"");
+            return 0;
+        } else {
+            Log.i("Teste22", pokemons.get(pkmn).size() + "");
+            return pokemons.get(pkmn).size();
+        }
     }
 
     public String getLogin() {

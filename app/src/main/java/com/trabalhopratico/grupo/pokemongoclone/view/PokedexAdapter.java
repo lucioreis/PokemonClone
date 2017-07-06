@@ -39,6 +39,7 @@ public class PokedexAdapter extends ArrayAdapter<Pokemon> {
             v = vi.inflate(R.layout.modelo_pokedex, null);
         }
         Pokemon pokemon = items.get(position);
+
         if (pokemon != null) {
             if(cf.getUser().getQuantidadeCapturas(pokemon) != 0) {
                 ((TextView) v.findViewById(R.id.txtNome)).setText(pokemon.getNome());
