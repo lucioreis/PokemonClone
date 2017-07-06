@@ -4,16 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/branco"
     android:orientation="vertical"
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.DetalhesPokedexActivity">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/toolbar_det"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0.12"
+        android:background="@color/red_my"
+        android:clickable="true"
+        android:weightSum="1">
 
+        <ImageButton
+            android:id="@+id/back_toolbart"
+            android:layout_width="54dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:background="@color/red_my"
+            android:onClick="voltar"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_action_back" />
+
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/branco"
+            android:text="Perfil do Usuário"
+            android:textSize="30sp"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imgPokemonDetalhes"
-        android:layout_width="223dp"
-        android:layout_height="201dp"
-        app:srcCompat="@drawable/p1"
-        android:layout_marginLeft="80dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@drawable/p1"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,6 +75,33 @@
         android:text="Capiturados: n"
         android:textSize="24sp"
         android:layout_marginLeft="90dp"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo: "
+            android:textSize="24sp"
+            android:textColor="@color/preto"/>
+        <TextView
+            android:id="@+id/tipo1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/preto"
+            />
+
+        <TextView
+            android:id="@+id/tipo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/preto"
+            />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btMapaDetalhes"

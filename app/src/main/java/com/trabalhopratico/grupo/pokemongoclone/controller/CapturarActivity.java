@@ -507,6 +507,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
         if(mapPokemon == null) return pokemonNovo;
         Set<Pokemon> pokemons = mapPokemon.keySet();
         for(Pokemon p : pokemons){
+            if(mapPokemon.get(p) != null && ! mapPokemon.isEmpty() )
             if(pokemon.getNome().equals( p.getNome() )) pokemonNovo = false;
         }
         return pokemonNovo;
