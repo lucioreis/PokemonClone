@@ -31,7 +31,6 @@ public class DetalhesPokedexActivity extends AppCompatActivity {
         txtNumero.setText(pokemon.getNumero()+"");
         txtQtd.setText(ControladoraFachadaSingleton.getOurInstance().getUser().getQuantidadeCapturas(pokemon)+"");
 
-
     }
     public void detalhes(View v){
         Intent it = new Intent(getBaseContext(), MapCapturasActivity.class);

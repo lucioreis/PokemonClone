@@ -1,10 +1,12 @@
 package com.trabalhopratico.grupo.pokemongoclone.model;
 
+import java.io.Serializable;
+
 /**
  * Created by usuario on 18/04/2017.
  */
 
-public class PokemomCapturado {
+public class PokemomCapturado implements Serializable{
     private double latitude;
     private double longitude;
     private String dtCaptura;

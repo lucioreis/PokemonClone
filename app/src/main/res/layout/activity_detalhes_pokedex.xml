@@ -51,5 +51,6 @@
         android:layout_height="wrap_content"
         android:text="Locais das capituras"
         android:layout_marginLeft="90dp"
-        android:onClick="detalhes"/>
+        android:onClick="detalhes"
+        android:background="@drawable/buttons_border"/>
 </LinearLayout>
