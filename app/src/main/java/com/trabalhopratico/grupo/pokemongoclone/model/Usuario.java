@@ -29,7 +29,7 @@ public class Usuario {
         //preencheCapturas();
     }
 
-    /*private void preencheCapturas(){
+    private void preencheCapturas(){
         BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
         String[] colunas = new String[]{"p.idPokemon idPkmn","pu.dtCaptura dtCaptura","pu.latitude latitude","pu.longitude longitude"};
         String where = "pu.login = u.login AND pu.idPokemon = p.idPokemon AND u.login = '" + login + "'";
@@ -51,7 +51,7 @@ public class Usuario {
 
             }
         }
-    }*/
+    }
 
     public boolean capturar (Aparecimento aparecimento) {
         Pokemon pkmnAux = aparecimento.getPokemon();
