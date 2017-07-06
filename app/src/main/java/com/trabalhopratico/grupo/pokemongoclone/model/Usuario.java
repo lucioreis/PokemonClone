@@ -26,7 +26,7 @@ public class Usuario {
 
     protected Usuario(String lg) {
         login = lg;
-        //preencheCapturas();
+//        preencheCapturas();
     }
 
     private void preencheCapturas(){
@@ -53,42 +53,42 @@ public class Usuario {
         }
     }
 
-//    public boolean capturar (Aparecimento aparecimento) {
-//        Pokemon pkmnAux = aparecimento.getPokemon();
-//        TimeUtil timeUtil = new TimeUtil();
-//        Map<String,String> ts = timeUtil.getHoraMinutoSegundoDiaMesAno();
-//        BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
-//        ContentValues _values = new ContentValues();
-//        _values.put("latitude", aparecimento.getLatitude());
-//        _values.put("longitude", aparecimento.getLongitude());
-//        _values.put("dtCaptura", ts.get("dia")+"/"+ts.get("mes")+"/"+ts.get("ano")+" "+ts.get("hora")+":"+ts.get("minuto")+":"+ts.get("segundo"));
-//        bd.inserir("pokemonusuario",_values);
-//        PokemomCapturado pc = new PokemomCapturado();
-//        double latitude = aparecimento.getLatitude();
-//        double longitude = aparecimento.getLongitude();
-//        String dtCaptura = ts.get("dia")+"/"+ts.get("mes")+"/"+ts.get("ano")+" "+ts.get("hora")+":"+ts.get("minuto")+":"+ts.get("segundo");
-//        pc.setLatitude(latitude);
-//        pc.setLongitude(longitude);
-//        pc.setDtCaptura(dtCaptura);
-//        pokemons.get(pkmnAux).add(pc);
-//        return true;
-//    }
+    public boolean capturar (Aparecimento aparecimento) {
+        Pokemon pkmnAux = aparecimento.getPokemon();
+        TimeUtil timeUtil = new TimeUtil();
+        Map<String,String> ts = timeUtil.getHoraMinutoSegundoDiaMesAno();
+        BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
+        ContentValues _values = new ContentValues();
+        _values.put("latitude", aparecimento.getLatitude());
+        _values.put("longitude", aparecimento.getLongitude());
+        _values.put("dtCaptura", ts.get("dia")+"/"+ts.get("mes")+"/"+ts.get("ano")+" "+ts.get("hora")+":"+ts.get("minuto")+":"+ts.get("segundo"));
+        bd.inserir("pokemonusuario",_values);
+        PokemomCapturado pc = new PokemomCapturado();
+        double latitude = aparecimento.getLatitude();
+        double longitude = aparecimento.getLongitude();
+        String dtCaptura = ts.get("dia")+"/"+ts.get("mes")+"/"+ts.get("ano")+" "+ts.get("hora")+":"+ts.get("minuto")+":"+ts.get("segundo");
+        pc.setLatitude(latitude);
+        pc.setLongitude(longitude);
+        pc.setDtCaptura(dtCaptura);
+        pokemons.get(pkmnAux).add(pc);
+        return true;
+    }
 
     //TODO - Checar como será persistido a captura do poemon
-    public boolean capturar(Aparecimento pkmn){
-        if(pokemons == null) pokemons = new HashMap<>();
-        TimeUtil timeUtil = new TimeUtil();
-        Map<String, String> data = timeUtil.getHoraMinutoSegundoDiaMesAno();
-        PokemomCapturado pokemomCapturado = new PokemomCapturado();
-        pokemomCapturado.setDtCaptura(data.get("mes")+"/"+data.get("dia")+"/"+data.get("ano"));
-        pokemomCapturado.setLatitude(pkmn.getLatitude());
-        pokemomCapturado.setLongitude(pkmn.getLongitude());
-        List<PokemomCapturado> tmp;
-        tmp = pokemons.get(pkmn.getPokemon());
-        if(tmp == null) tmp = new ArrayList<>();
-        tmp.add(pokemomCapturado);
-        pokemons.put(pkmn.getPokemon(), tmp);
-
+//    public boolean capturar(Aparecimento pkmn){
+//        if(pokemons == null) pokemons = new HashMap<>();
+//        TimeUtil timeUtil = new TimeUtil();
+//        Map<String, String> data = timeUtil.getHoraMinutoSegundoDiaMesAno();
+//        PokemomCapturado pokemomCapturado = new PokemomCapturado();
+//        pokemomCapturado.setDtCaptura(data.get("mes")+"/"+data.get("dia")+"/"+data.get("ano"));
+//        pokemomCapturado.setLatitude(pkmn.getLatitude());
+//        pokemomCapturado.setLongitude(pkmn.getLongitude());
+//        List<PokemomCapturado> tmp;
+//        tmp = pokemons.get(pkmn.getPokemon());
+//        if(tmp == null) tmp = new ArrayList<>();
+//        tmp.add(pokemomCapturado);
+//        pokemons.put(pkmn.getPokemon(), tmp);
+//
         //Nao sei se isso fica aqui
 //        BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
 //        ContentValues contentValues = new ContentValues();
@@ -99,8 +99,8 @@ public class Usuario {
 //        contentValues.put("dtCaptura", data.get("mes")+"/"+data.get("dia")+"/"+data.get("ano"));
 //        bd.inserir("pokemonususario", contentValues);
 
-        return false;
-    }
+//        return false;
+//    }
 
     public int getQuantidadeCapturas(Pokemon pkmn){
         return 0;
