@@ -156,8 +156,8 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
                 Log.i("Dimensao", "Posicao pkmn - X: " + pokemon.getX() + " Y: " + pokemon.getY());
                 Log.i("Dimensao", "Posicao pkbl - X: " + _pokeball.getX() + " Y: " + _pokeball.getY());
 
-                grausTotais[1] += pokemon.getX()/coeficiente;
-                grausTotais[0] += pokemon.getY()/coeficiente;
+                grausTotais[1] += centerX/coeficiente;
+                grausTotais[0] += centerY/coeficiente;
             } });
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -215,7 +215,7 @@ public class CapturarActivity extends Activity implements SensorEventListener, V
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        if(!(pokeballPreparado || pokemonPreparado)) return;
+       // if(!(pokeballPreparado && pokemonPreparado)) return;
 
         float xyz[] = new float[3];
         for(int i = 0; i < 3; i++){

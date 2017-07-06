@@ -74,15 +74,16 @@ public class SplashActivity extends Activity {
                 finish();
             }
         });
-        if (!ControladoraFachadaSingleton.getOurInstance().temSessao()) {
-           // Intent it = new Intent(this, LoginActivity.class);
-           // startActivity(it);
-
-        } else {
-           // Intent it = new Intent(this, MapActivity.class);
-          //  startActivity(it);
-        }
     }
+//        if (!ControladoraFachadaSingleton.getOurInstance().temSessao()) {
+//            Intent it = new Intent(this, LoginActivity.class);
+//            startActivity(it);
+//
+//        } else {
+//            Intent it = new Intent(this, MapActivity.class);
+//            startActivity(it);
+//        }
+//    }
     public static boolean VerificaConexao(Context _context) {
         boolean conectado;
         ConnectivityManager conectivtyManager = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);

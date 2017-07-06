@@ -44,7 +44,7 @@ public final class ControladoraFachadaSingleton implements Serializable{
         Log.i("CFS", "Iniciou a lista de tipos");
         daoPokemons(this);
         Log.i("CFS", "Iniciou a tabela hash de pokemons");
-        daoUsuario();
+       // daoUsuario();
     }
 
     private void daoTipos(){
@@ -74,15 +74,16 @@ public final class ControladoraFachadaSingleton implements Serializable{
         String colunas[] = new String []{"login", "senha", "nome", "sexo", "foto", "dtCadastro"};
         Cursor c = BancoDadosSingleton.getInstance().buscar("usuario", colunas, "", "");
         List<Pokemon> lC, lI, lR, lL;
-        while(c.moveToNext()) {
-            int login = c.getColumnIndex("login");
-            user = new Usuario(c.getString(login));
-            user.setNome(c.getString(c.getColumnIndex("nome")));
-            user.setSenha(c.getString(c.getColumnIndex("senha")));
-            user.setFoto(c.getString(c.getColumnIndex("foto")));
-            user.setDtCadastro(c.getString(c.getColumnIndex("dtCadastro")));
-            user.setSexo(c.getString(c.getColumnIndex("sexo")));
-        }
+        if(user == null)
+            while(c.moveToNext()) {
+                int login = c.getColumnIndex("login");
+                user = new Usuario(c.getString(login));
+                user.setNome(c.getString(c.getColumnIndex("nome")));
+                user.setSenha(c.getString(c.getColumnIndex("senha")));
+                user.setFoto(c.getString(c.getColumnIndex("foto")));
+                user.setDtCadastro(c.getString(c.getColumnIndex("dtCadastro")));
+                user.setSexo(c.getString(c.getColumnIndex("sexo")));
+            }
     }
 
     public List<Pokemon> getPokemon() {
@@ -104,6 +105,7 @@ public final class ControladoraFachadaSingleton implements Serializable{
     }
 
     public Usuario getUser() {
+        if(user == null) daoUsuario();
         return user;
     }
 

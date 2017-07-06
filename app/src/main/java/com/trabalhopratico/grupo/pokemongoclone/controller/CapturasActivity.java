@@ -20,7 +20,7 @@ import com.trabalhopratico.grupo.pokemongoclone.model.Pokemon;
 import java.util.List;
 import java.util.Map;
 
-public class CapturasActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class CapturasActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     ControladoraFachadaSingleton cg = ControladoraFachadaSingleton.getOurInstance();
     private GoogleMap mapa;
@@ -62,9 +62,16 @@ public class CapturasActivity extends AppCompatActivity implements OnMapReadyCal
                 }
             }
         }
+        mapa.setOnMarkerClickListener(this);
         mapa.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         if (marker != null){
             mapa.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),18));
         }
     }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return true;
+    }
+
 }

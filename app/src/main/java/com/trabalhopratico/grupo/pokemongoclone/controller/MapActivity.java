@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,12 +63,12 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
     public int TEMPO_REQUISICAO_LATLONG = 5000;
     public int DISTANCIA_MIN_METROS = 0;
     private boolean taRodando = true;
+    private WebView webView;
     private ControladoraFachadaSingleton cg = ControladoraFachadaSingleton.getOurInstance();
     List<Marker> lMO = new ArrayList<Marker>();
     Runnable sorteador = new Runnable() {
         @Override
         public void run() {
-
             Log.i("THREAD", "GALINHA");
             Log.i("THREAD", "OI");
             double latMin = aux.latitude - 0.0003;
@@ -143,7 +145,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
 
             }
             lm.requestLocationUpdates(provider, TEMPO_REQUISICAO_LATLONG, DISTANCIA_MIN_METROS, this);
-            aux = new LatLng(-20.752946,-42.879097);
+            aux = new LatLng(-20.764992, -42.868496);
             playerPosition = new Location(provider);
             playerPosition.setLongitude(aux.longitude);
             playerPosition.setLatitude(aux.latitude);
@@ -156,6 +158,10 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
         } else {
             bmp = BitmapDescriptorFactory.fromResource(R.drawable.female);
         }
+
+//        webView = (WebView) findViewById(R.id.loader_map);
+//        webView.loadUrl("file:///android_asset/loading.gif");
+//        webView.setBackgroundColor(Color.TRANSPARENT);
     }
 
 
@@ -219,16 +225,20 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
         aux = new LatLng(playerPosition.getLatitude(),playerPosition.getLongitude());
         playerPosition.setLongitude(aux.longitude);
         playerPosition.setLatitude(aux.latitude);
-        if(playerPosition != null) {
+        aux = new LatLng(-20.764906, -42.868504);
+        playerPosition = new Location(provider);
+        playerPosition.setLongitude(aux.longitude);
+        playerPosition.setLatitude(aux.latitude);
+//        if(playerPosition != null) {
             aux = new LatLng(playerPosition.getLatitude(),playerPosition.getLongitude());
-            playerPosition.setLongitude(aux.longitude);
-            playerPosition.setLatitude(aux.latitude);
-        } else {
-            aux = new LatLng(-20.752946,-42.879097);
-            playerPosition = new Location(provider);
-            playerPosition.setLongitude(aux.longitude);
-            playerPosition.setLatitude(aux.latitude);
-        }
+//            playerPosition.setLongitude(aux.longitude);
+//            playerPosition.setLatitude(aux.latitude);
+//        } else if (playerPosition.getLatitude() == 0 && playerPosition.getLongitude() == 0){
+//            aux = new LatLng(-20.752946,-42.879097);
+//            playerPosition = new Location(provider);
+//            playerPosition.setLongitude(aux.longitude);
+//            playerPosition.setLatitude(aux.latitude);
+//        }
 
         Usuario user = ControladoraFachadaSingleton.getOurInstance().getUser();
         handler.post(sorteador);
@@ -245,6 +255,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
 
     @Override
     public void onLocationChanged(Location location) {
+        //if(webView.isEnabled()) webView.stopLoading();
         /*if(location != null) {
             playerPosition = location;
         }
@@ -329,7 +340,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
                     if (marker.getTitle().equals(a.getPokemon().getNome())) {
                         Log.i("Apareceu", a.getPokemon().getNome());
                         it.putExtra("Apar", a);
-                        //marker.remove();
+                        marker.remove();
                         break;
                     }
                 }

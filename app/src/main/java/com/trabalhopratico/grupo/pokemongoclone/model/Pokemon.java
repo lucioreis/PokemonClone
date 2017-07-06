@@ -49,11 +49,7 @@ public class Pokemon implements Serializable {
         }
     }
 
-    public boolean equals(Object obj){
-        return false;
-    }
-
-    public int hashCode(){
+    public int hashCode(int i){
         if (categoria.equals("C")) return 0;
         else if (categoria.equals("I")) return 1;
         else if (categoria.equals("R")) return 2;
@@ -104,5 +100,16 @@ public class Pokemon implements Serializable {
         return tipos;
     }
 
+    @Override
+    public int hashCode(){
+        return numero;
+    }
 
+    @Override
+    public boolean equals(Object p){
+        if(p instanceof Pokemon){
+            return this.numero == ((Pokemon) p).numero;
+        }
+        return false;
+    }
 }
