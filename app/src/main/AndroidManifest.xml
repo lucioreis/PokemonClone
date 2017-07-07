@@ -3,8 +3,8 @@
 package="com.trabalhopratico.grupo.pokemongoclone">
 <permission
     android:name="com.trabalhopratico.grupo.pokemongoclone.permission.MAPS_RECEIVE"
-    android:protectionLevel="signature"
-    />
+    android:protectionLevel="signature" />
+
     <uses-sdk android:minSdkVersion="19" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -61,20 +61,28 @@ package="com.trabalhopratico.grupo.pokemongoclone">
     </activity>
 
     <activity android:name=".controller.CapturarActivity"
-                android:screenOrientation="portrait"/>1
+        android:theme="@android:style/Theme.NoTitleBar"
+                android:screenOrientation="portrait"/>
+
     <activity android:name=".controller.MapActivity"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
                 android:screenOrientation="portrait"/>
+
     <activity android:name=".controller.MapCapturasActivity"
+        android:theme="@android:style/Theme.NoTitleBar"
                 android:screenOrientation="portrait"/>
+
     <activity android:name=".controller.DetalhesPokedexActivity"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
                 android:screenOrientation="portrait"/>
 
     <activity android:name=".controller.PerfilActivity"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
                 android:screenOrientation="portrait">
     </activity>
 
     <activity android:name=".controller.PokedexActivity"
-        android:theme="@android:style/Theme.NoTitleBar"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
         android:screenOrientation="portrait"/>
 
     <activity android:name=".controller.CapturasActivity"

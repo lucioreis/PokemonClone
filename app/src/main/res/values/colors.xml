@@ -8,7 +8,7 @@
     <color name="preto">#000000</color>
     <color name="azul">#3F51B5 </color>
     <color name="black">#000000</color>
-    <color name="normal">#A8A77A</color>
+    <color name="Normal">#A8A77A</color>
     <color name="Fire">#EE8130</color>
     <color name="Fighting">#C22E28</color>
     <color name="Flying">#A98FF3</color>
@@ -24,6 +24,7 @@
     <color name="Dark">#705746</color>
     <color name="Steel">#B7B7CE</color>
     <color name="Fairy">#D685AD</color>
-    <color name="Ground">#000000</color>
+    <color name="Ground">#e0c068</color>
+    <color name="Poison">#a040a0</color>
 
 </resources>

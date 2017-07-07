@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,13 +19,32 @@ import com.trabalhopratico.grupo.pokemongoclone.model.ControladoraFachadaSinglet
 import com.trabalhopratico.grupo.pokemongoclone.model.Usuario;
 import com.trabalhopratico.grupo.pokemongoclone.util.BancoDadosSingleton;
 
-public class PerfilActivity extends Activity {
+public class PerfilActivity extends AppCompatActivity {
     private final ControladoraFachadaSingleton ctrl = ControladoraFachadaSingleton.getOurInstance();
     private final BancoDadosSingleton bd = BancoDadosSingleton.getInstance();
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Perfil");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                finish();
+            }
+        });
+        getSupportActionBar().setTitle("Perfil do Usuário");
         Usuario usuario = ctrl.getUser();
         TextView nome = (TextView) findViewById(R.id.nome);
         TextView data_de_inicio = (TextView) findViewById(R.id.inicio_da_aventura);

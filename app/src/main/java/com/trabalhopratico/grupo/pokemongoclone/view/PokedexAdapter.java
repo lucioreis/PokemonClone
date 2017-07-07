@@ -40,18 +40,16 @@ public class PokedexAdapter extends ArrayAdapter<Pokemon> {
         }
         Pokemon pokemon = items[position];
 
-        if (pokemon != null) {
-            if(cf.getUser().getQuantidadeCapturas(pokemon) != 0) {
+        if (pokemon != null && cf.getUser().getQuantidadeCapturas(pokemon) != 0) {
                 ((TextView) v.findViewById(R.id.txtNome)).setText(pokemon.getNome());
-                ((TextView) v.findViewById(R.id.txtCodigo)).setText(pokemon.getNumero()+"");
+                ((TextView) v.findViewById(R.id.txtCodigo)).setText(String.format("#%03d", pokemon.getNumero()));
                 ((ImageView) v.findViewById(R.id.imgPokemon)).setImageResource(pokemon.getIcone());
-
-            }else {
-                ((TextView) v.findViewById(R.id.txtNome)).setText("???");
-                ((TextView) v.findViewById(R.id.txtCodigo)).setText(pokemon.getNumero()+"");
-                ((ImageView) v.findViewById(R.id.imgPokemon)).setImageResource(R.drawable.help);
-            }
+        }else {
+            ((TextView) v.findViewById(R.id.txtNome)).setText("???");
+            ((TextView) v.findViewById(R.id.txtCodigo)).setText(String.format("#%03d",position+1));
+            ((ImageView) v.findViewById(R.id.imgPokemon)).setImageResource(R.drawable.help);
         }
+
         return v;
     }
 }

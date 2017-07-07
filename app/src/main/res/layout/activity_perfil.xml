@@ -9,35 +9,10 @@
     android:weightSum="1"
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.PerfilActivity">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/toolbar_perfil"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="0.12"
-        android:background="@color/red_my"
-        android:clickable="true"
-        android:weightSum="1">
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/toolbar"/>
 
-        <ImageButton
-            android:id="@+id/back_toolbar"
-            android:adjustViewBounds="true"
-            android:layout_width="54dp"
-            android:layout_gravity="center_vertical"
-            android:layout_height="40dp"
-            android:scaleType="fitStart"
-            android:background="@color/red_my"
-            android:src="@drawable/ic_action_back"
-            android:onClick="voltar"/>
-        <TextView
-            android:id="@+id/titulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/branco"
-            android:text="Perfil do Usuário"
-            android:textSize="30sp"/>
-    </LinearLayout>
     <TextView
         android:id="@+id/nome"
         android:layout_width="wrap_content"

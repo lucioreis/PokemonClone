@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,8 +22,8 @@ import java.util.Map;
 
 import static com.trabalhopratico.grupo.pokemongoclone.R.id.pokemon;
 
-public class PokedexActivity extends Activity {
-
+public class PokedexActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ControladoraFachadaSingleton cf = ControladoraFachadaSingleton.getOurInstance();
@@ -30,9 +31,9 @@ public class PokedexActivity extends Activity {
         setContentView(R.layout.activity_pokedex);
         ListView lstPokemons = (ListView) findViewById(R.id.lstPokemons);
         Map<Pokemon, List<PokemomCapturado>> mapAux = cf.getUser().getPokemons();
-        Pokemon pks[] = new Pokemon[152];
+        Pokemon pks[] = new Pokemon[151];
         for(Pokemon p : mapAux.keySet()){
-            pks[p.getNumero()] = p;
+            pks[p.getNumero()-1] = p;
         }
         final PokedexAdapter adapter = new PokedexAdapter(getBaseContext(), R.layout.modelo_pokedex, pks);
         lstPokemons.setAdapter(adapter);
@@ -49,6 +50,23 @@ public class PokedexActivity extends Activity {
                 }else{
                     Toast.makeText(getBaseContext(), "Você ainda não capturou esse pokemon", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Pokedéx");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                finish();
             }
         });
     }

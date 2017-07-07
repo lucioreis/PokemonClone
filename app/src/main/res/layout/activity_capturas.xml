@@ -6,11 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.CapturasActivity">
 
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/toolbar"/>
     <fragment
         android:id="@+id/fragment2"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_below="@id/app_bar"/>
 </RelativeLayout>

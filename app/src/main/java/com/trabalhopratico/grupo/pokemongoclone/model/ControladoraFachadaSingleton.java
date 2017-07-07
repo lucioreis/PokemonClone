@@ -74,8 +74,7 @@ public final class ControladoraFachadaSingleton implements Serializable{
         String colunas[] = new String []{"login", "senha", "nome", "sexo", "foto", "dtCadastro"};
         Cursor c = BancoDadosSingleton.getInstance().buscar("usuario", colunas, "", "");
         List<Pokemon> lC, lI, lR, lL;
-        if(user == null)
-            while(c.moveToNext()) {
+        while(c.moveToNext()) {
                 int login = c.getColumnIndex("login");
                 user = new Usuario(c.getString(login));
                 user.setNome(c.getString(c.getColumnIndex("nome")));

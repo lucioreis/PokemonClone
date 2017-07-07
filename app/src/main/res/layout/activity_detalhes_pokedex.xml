@@ -7,36 +7,9 @@
     android:background="@color/branco"
     android:orientation="vertical"
     tools:context="com.trabalhopratico.grupo.pokemongoclone.controller.DetalhesPokedexActivity">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/toolbar_det"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="0.12"
-        android:background="@color/red_my"
-        android:clickable="true"
-        android:weightSum="1">
-
-        <ImageButton
-            android:id="@+id/back_toolbart"
-            android:layout_width="54dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:adjustViewBounds="true"
-            android:background="@color/red_my"
-            android:onClick="voltar"
-            android:scaleType="fitStart"
-            android:src="@drawable/ic_action_back" />
-
-        <TextView
-            android:id="@+id/titulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/branco"
-            android:text="Perfil do Usuário"
-            android:textSize="30sp"/>
-    </LinearLayout>
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/toolbar"/>
 
     <ImageView
         android:id="@+id/imgPokemonDetalhes"
@@ -44,7 +17,8 @@
         android:layout_height="wrap_content"
         android:scaleType="centerInside"
         android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/p1"/>
+        android:padding="20dp"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,25 +30,37 @@
             android:layout_height="wrap_content"
             android:text="Código"
             android:textSize="24sp"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="90dp" />
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="90dp" />
 
         <TextView
             android:id="@+id/txtNomeDetalhes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/preto"
             android:text="Nome"
             android:textSize="24sp" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtQtdDetalhes"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Capiturados: n"
-        android:textSize="24sp"
-        android:layout_marginLeft="90dp"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Capiturados: "
+            android:textSize="24sp"
+            android:textColor="@color/preto"
+            android:layout_marginStart="90dp"/>
+        <TextView
+            android:id="@+id/txtQtdDetalhes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,11 +70,13 @@
             android:layout_height="wrap_content"
             android:text="Tipo: "
             android:textSize="24sp"
+            android:layout_margin="5dp"
             android:textColor="@color/preto"/>
         <TextView
             android:id="@+id/tipo1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:textSize="24sp"
             android:textColor="@color/preto"
             />
@@ -98,6 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
+            android:layout_margin="5dp"
             android:textColor="@color/preto"
             />
 
@@ -108,7 +97,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Locais das capituras"
-        android:layout_marginLeft="90dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:onClick="detalhes"
+        android:textSize="24sp"
         android:background="@drawable/buttons_border"/>
 </LinearLayout>

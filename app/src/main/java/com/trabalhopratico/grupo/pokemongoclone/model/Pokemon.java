@@ -107,9 +107,8 @@ public class Pokemon implements Serializable {
 
     @Override
     public boolean equals(Object p){
-        if(p instanceof Pokemon){
+        if(p instanceof Pokemon) {
             return this.numero == ((Pokemon) p).numero;
-        }
-        return false;
+        } return false;
     }
 }

@@ -41,12 +41,16 @@ public class Usuario {
         //String orderBy = "p.idPokemon";
         Cursor c = bd.buscar("pokemon p, usuario u, pokemonusuario pu", colunas, where, "");
         List<Pokemon> listpkmn  = instance.getPokemon();
+        if(pokemons.keySet().isEmpty()){
+            for(Pokemon p : listpkmn){
+                pokemons.put(p, new ArrayList<PokemomCapturado>());
+            }
+        }
         Log.i("size","size of listpkm = "+listpkmn.size());
         while (c.moveToNext()) {
             for(Pokemon p : listpkmn) {
                 int num = p.getNumero();
-                if(pokemons.get(p) == null)
-                    pokemons.put(p,new ArrayList<PokemomCapturado>());
+                    Log.i("chaves", p.getNome());
                 if (num == c.getInt(c.getColumnIndex("idPkmn"))) {
                     PokemomCapturado pc = new PokemomCapturado();
                     pc.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
@@ -54,9 +58,9 @@ public class Usuario {
                     pc.setDtCaptura(c.getString(c.getColumnIndex("dtCaptura")));
                     pokemons.get(p).add(pc);
                 }
-
             }
         }
+        Log.i("size", "Pokeomn keys size->" + pokemons.keySet().size()+"");
     }
 
     public boolean capturar (Aparecimento aparecimento) {
