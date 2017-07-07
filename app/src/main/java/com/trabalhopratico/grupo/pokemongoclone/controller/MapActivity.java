@@ -76,7 +76,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
             double longMin = aux.longitude - 0.0003;
             double longMax = aux.longitude + 0.0003;
             Log.i("THREAD", "OI");
-           // ControladoraFachadaSingleton cg = ControladoraFachadaSingleton.getOurInstance();
+
             cg.sorteaAparecimentos(latMin, latMax, longMin, longMax);
             Log.i("THREAD", "OI");
             if (lMO.size() > 0) {
@@ -239,8 +239,6 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
 //            playerPosition.setLongitude(aux.longitude);
 //            playerPosition.setLatitude(aux.latitude);
 //        }
-
-        Usuario user = ControladoraFachadaSingleton.getOurInstance().getUser();
         handler.post(sorteador);
         mapa.setIndoorEnabled(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -248,6 +246,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
         }
         mapa.setMyLocationEnabled(true);
         mapa.setOnMarkerClickListener(this);
+        marker = mapa.addMarker(new MarkerOptions().position(aux).icon(bmp));
 
         marker = mapa.addMarker(new MarkerOptions().position(aux).title("Voce").icon(bmp));
         mapa.animateCamera(CameraUpdateFactory.newLatLngZoom(aux,18));
@@ -281,7 +280,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, Locatio
         Location newPosition = new Location(provider);
         playerPosition.setLatitude(latitude);
         playerPosition.setLongitude(longitude);
-        handler.post(sorteador);
+        //handler.post(sorteador);
         aux = new LatLng(playerPosition.getLatitude(),playerPosition.getLongitude());
         marker = mapa.addMarker(new MarkerOptions().position(latLng).icon(bmp));
 
